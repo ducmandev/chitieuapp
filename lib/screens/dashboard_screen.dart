@@ -254,101 +254,101 @@ class DashboardScreen extends StatelessWidget {
             ),
           ),
         ),
-        // Cyan fill clipped to zigzag shape
-        ClipPath(
-          clipper: ZigzagClipper(),
-          child: Container(
+        // Rectangular cyan container (zigzag is created by overlay on top)
+        Container(
+          decoration: BoxDecoration(
             color: NeoColors.tertiary,
-            padding: const EdgeInsets.only(
-              top: 40,
-              left: 32,
-              right: 32,
-              bottom: 40,
-            ),
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                children: [
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 12,
-                      vertical: 4,
-                    ),
-                    decoration: BoxDecoration(
-                      color: neo.surface,
-                      border: Border.all(color: neo.ink),
-                      boxShadow: [
-                        BoxShadow(color: neo.ink, offset: const Offset(2, 2)),
-                      ],
-                    ),
-                    child: Text(
-                      AppLocalizations.of(context)!.netWorth,
-                      style: NeoTypography.mono.copyWith(
-                        fontSize: 14,
-                        fontWeight: FontWeight.bold,
-                        color: neo.textMain,
-                      ),
-                    ),
+            border: Border.all(color: neo.ink, width: 4),
+          ),
+          padding: const EdgeInsets.only(
+            top: 40,
+            left: 32,
+            right: 32,
+            bottom: 40,
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              children: [
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 4,
                   ),
-                  const SizedBox(height: 8),
-                  Text(
-                    nwStr,
-                    style: NeoTypography.textTheme.displayMedium?.copyWith(
-                      fontSize: nwStr.length > 8 ? 32 : 48,
-                      letterSpacing: -2,
-                      color: NeoColors.ink,
-                    ),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  const SizedBox(height: 16),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 8,
-                          vertical: 4,
-                        ),
-                        color: NeoColors.ink,
-                        child: Row(
-                          children: [
-                            const Icon(
-                              Icons.trending_up,
-                              color: NeoColors.primary,
-                              size: 14,
-                            ),
-                            const SizedBox(width: 4),
-                            Text(
-                              '+12%',
-                              style: NeoTypography.mono.copyWith(
-                                color: NeoColors.primary,
-                                fontSize: 12,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      const SizedBox(width: 8),
-                      Text(
-                        AppLocalizations.of(context)!.vsLastMonth,
-                        style: NeoTypography.mono.copyWith(
-                          fontSize: 12,
-                          color: NeoColors.ink,
-                        ),
-                      ),
+                  decoration: BoxDecoration(
+                    color: neo.surface,
+                    border: Border.all(color: neo.ink),
+                    boxShadow: [
+                      BoxShadow(color: neo.ink, offset: const Offset(2, 2)),
                     ],
                   ),
-                ],
-              ),
+                  child: Text(
+                    AppLocalizations.of(context)!.netWorth,
+                    style: NeoTypography.mono.copyWith(
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold,
+                      color: neo.textMain,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  nwStr,
+                  style: NeoTypography.textTheme.displayMedium?.copyWith(
+                    fontSize: nwStr.length > 8 ? 32 : 48,
+                    letterSpacing: -2,
+                    color: NeoColors.ink,
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                const SizedBox(height: 16),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 8,
+                        vertical: 4,
+                      ),
+                      color: NeoColors.ink,
+                      child: Row(
+                        children: [
+                          const Icon(
+                            Icons.trending_up,
+                            color: NeoColors.primary,
+                            size: 14,
+                          ),
+                          const SizedBox(width: 4),
+                          Text(
+                            '+12%',
+                            style: NeoTypography.mono.copyWith(
+                              color: NeoColors.primary,
+                              fontSize: 12,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    Text(
+                      AppLocalizations.of(context)!.vsLastMonth,
+                      style: NeoTypography.mono.copyWith(
+                        fontSize: 12,
+                        color: NeoColors.ink,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
             ),
           ),
         ),
-        // Zigzag border drawn on top
+        // Background-colored overlay that masks cyan edges into zigzag shape
         Positioned.fill(
           child: CustomPaint(
-            painter: ZigzagBorderPainter(borderColor: neo.ink),
+            painter: ZigzagOverlayPainter(backgroundColor: neo.background),
           ),
         ),
       ],
@@ -594,44 +594,52 @@ class DashboardScreen extends StatelessWidget {
 
 // ─── Painters (unchanged) ──────────────────────────────────────────────────────
 
-// --- Custom Clipper for zigzag/sawtooth shape ---
-class ZigzagClipper extends CustomClipper<Path> {
+// --- Paints background-colored triangles on top/bottom edges to create zigzag ---
+class ZigzagOverlayPainter extends CustomPainter {
+  final Color backgroundColor;
   final double zigzagHeight;
   final int teethCount;
 
-  ZigzagClipper({this.zigzagHeight = 18, this.teethCount = 14});
+  ZigzagOverlayPainter({
+    required this.backgroundColor,
+    this.zigzagHeight = 18,
+    this.teethCount = 14,
+  });
 
   @override
-  Path getClip(Size size) {
-    final path = Path();
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()
+      ..color = backgroundColor
+      ..style = PaintingStyle.fill;
+
     final toothWidth = size.width / teethCount;
 
-    // Start at top-left, below zigzag
-    path.moveTo(0, zigzagHeight);
-
-    // Draw zigzag teeth along top edge
+    // Top edge: paint inverted triangles (pointing DOWN into cyan)
+    // These fill the space between zigzag peaks
     for (int i = 0; i < teethCount; i++) {
       final x = toothWidth * i;
-      path.lineTo(x + toothWidth / 2, 0);
-      path.lineTo(x + toothWidth, zigzagHeight);
+      final path = Path()
+        ..moveTo(x, 0)
+        ..lineTo(x + toothWidth / 2, zigzagHeight)
+        ..lineTo(x + toothWidth, 0)
+        ..close();
+      canvas.drawPath(path, paint);
     }
 
-    // Right side down to bottom zigzag
-    path.lineTo(size.width, size.height - zigzagHeight);
-
-    // Draw zigzag teeth along bottom edge (right to left)
-    for (int i = teethCount; i > 0; i--) {
+    // Bottom edge: paint triangles (pointing UP into cyan)
+    for (int i = 0; i < teethCount; i++) {
       final x = toothWidth * i;
-      path.lineTo(x - toothWidth / 2, size.height);
-      path.lineTo(x - toothWidth, size.height - zigzagHeight);
+      final path = Path()
+        ..moveTo(x, size.height)
+        ..lineTo(x + toothWidth / 2, size.height - zigzagHeight)
+        ..lineTo(x + toothWidth, size.height)
+        ..close();
+      canvas.drawPath(path, paint);
     }
-
-    path.close();
-    return path;
   }
 
   @override
-  bool shouldReclip(covariant CustomClipper<Path> oldClipper) => false;
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }
 
 // --- Custom Painter for zigzag border outline ---
