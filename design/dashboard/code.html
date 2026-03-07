@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Neo.Cash Dashboard</title>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;family=Space+Mono:ital,wght@0,400;0,700;1,400&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Theme Config -->
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#FFF500", // Warning Yellow
+                        "secondary": "#FF00D6", // Electric Pink
+                        "tertiary": "#00D1FF", // Cyan
+                        "background-light": "#F2F0E9", // Bone/Off-white
+                        "background-dark": "#222210", 
+                        "surface": "#FFFFFF",
+                        "ink": "#000000",
+                    },
+                    fontFamily: {
+                        "display": ["Space Grotesk", "sans-serif"],
+                        "mono": ["Space Mono", "monospace"],
+                    },
+                    boxShadow: {
+                        "hard": "4px 4px 0px 0px #000000",
+                        "hard-sm": "2px 2px 0px 0px #000000",
+                        "hard-xl": "6px 6px 0px 0px #000000",
+                    },
+                    borderWidth: {
+                        "3": "3px",
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        /* Custom Utilities for Patterns and Animation */
+        .bg-pattern-dots {
+            background-image: radial-gradient(#000 1px, transparent 1px);
+            background-size: 10px 10px;
+        }
+        .bg-pattern-diagonal {
+            background: repeating-linear-gradient(
+                45deg,
+                #000,
+                #000 2px,
+                transparent 2px,
+                transparent 8px
+            );
+        }
+        
+        @keyframes marquee {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-100%); }
+        }
+        .animate-marquee {
+            animation: marquee 10s linear infinite;
+        }
+
+        /* Jagged edges via clip-path for net worth bg */
+        .jagged-box {
+            clip-path: polygon(
+                0% 5%, 5% 0%, 10% 5%, 15% 0%, 20% 5%, 25% 0%, 30% 5%, 35% 0%, 40% 5%, 45% 0%, 50% 5%, 55% 0%, 60% 5%, 65% 0%, 70% 5%, 75% 0%, 80% 5%, 85% 0%, 90% 5%, 95% 0%, 100% 5%, 
+                100% 95%, 95% 100%, 90% 95%, 85% 100%, 80% 95%, 75% 100%, 70% 95%, 65% 100%, 60% 95%, 55% 100%, 50% 95%, 45% 100%, 40% 95%, 35% 100%, 30% 95%, 25% 100%, 20% 95%, 15% 100%, 10% 95%, 5% 100%, 0% 95%
+            );
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light text-ink font-display overflow-x-hidden min-h-screen flex flex-col antialiased">
+<!-- Sticky Header -->
+<header class="sticky top-0 z-50 bg-background-light border-b-3 border-ink px-5 py-4 flex items-center justify-between">
+<div class="flex items-center gap-2">
+<div class="w-10 h-10 bg-primary border-2 border-ink shadow-hard-sm flex items-center justify-center">
+<span class="material-symbols-outlined !text-[28px]">attach_money</span>
+</div>
+<h1 class="text-2xl font-black tracking-tighter italic">NEO.CASH</h1>
+</div>
+<div class="flex items-center gap-3">
+<span class="font-mono text-xs font-bold bg-ink text-white px-2 py-1">v2.0</span>
+<button class="w-10 h-10 flex items-center justify-center border-2 border-ink bg-white shadow-hard-sm hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all">
+<span class="material-symbols-outlined">settings</span>
+</button>
+</div>
+</header>
+<!-- Main Content -->
+<main class="flex-1 flex flex-col px-5 pt-8 pb-32 gap-10">
+<!-- Date & Welcome -->
+<section class="flex justify-between items-end border-b-2 border-ink pb-2 border-dashed">
+<div class="flex flex-col">
+<span class="font-mono text-sm font-bold text-gray-500">USER_01</span>
+<span class="font-mono text-lg font-bold">OCT 24 // THU</span>
+</div>
+<div class="bg-secondary text-white font-mono text-xs px-2 py-0.5 border border-ink transform -rotate-2">
+                STATUS: BROKE
+            </div>
+</section>
+<!-- Net Worth Display -->
+<section class="relative py-4">
+<!-- Decorative elements behind -->
+<div class="absolute -top-4 -right-4 w-16 h-16 bg-pattern-dots opacity-30"></div>
+<div class="jagged-box bg-tertiary p-8 border-none relative shadow-hard">
+<div class="absolute inset-0 border-4 border-ink jagged-box pointer-events-none"></div>
+<div class="flex flex-col items-center justify-center text-center relative z-10">
+<span class="font-mono text-sm font-bold bg-white px-3 border border-ink shadow-hard-sm mb-2">NET WORTH</span>
+<h2 class="text-6xl font-black tracking-tighter drop-shadow-sm">$4,250<span class="text-4xl">.00</span></h2>
+<div class="flex gap-2 mt-4">
+<div class="flex items-center gap-1 bg-ink text-primary px-2 py-1 text-xs font-mono">
+<span class="material-symbols-outlined text-sm">trending_up</span>
+                            +12%
+                        </div>
+<div class="font-mono text-xs py-1">VS LAST MONTH</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Monthly Cap / Progress -->
+<section class="flex flex-col gap-2">
+<div class="flex justify-between items-end font-bold">
+<h3 class="text-xl uppercase tracking-tight">Monthly Cap</h3>
+<span class="font-mono text-sm">88% FRIED</span>
+</div>
+<div class="relative h-14 w-full border-3 border-ink bg-white shadow-hard">
+<!-- Progress Fill -->
+<div class="absolute top-0 left-0 h-full bg-primary w-[88%] border-r-3 border-ink bg-pattern-diagonal opacity-50"></div>
+<div class="absolute top-0 left-0 h-full bg-primary w-[88%] mix-blend-multiply"></div>
+<!-- Text Overlay -->
+<div class="absolute inset-0 flex items-center justify-between px-4 z-10">
+<span class="font-mono font-bold text-ink">SPENT: $880</span>
+<span class="font-mono font-bold bg-ink text-white px-2">LEFT: $120</span>
+</div>
+</div>
+</section>
+<!-- Latest Regrets (Transactions) -->
+<section class="flex flex-col gap-4">
+<!-- Marquee Header -->
+<div class="bg-secondary border-3 border-ink shadow-hard overflow-hidden py-2 whitespace-nowrap">
+<div class="animate-marquee inline-block font-mono font-bold text-white text-sm">
+                    LATEST REGRETS /// WHERE DID THE MONEY GO? /// LATEST REGRETS /// WHERE DID THE MONEY GO? /// LATEST REGRETS /// WHERE DID THE MONEY GO? ///
+                </div>
+</div>
+<div class="bg-white border-3 border-ink shadow-hard p-1 flex flex-col gap-0">
+<!-- Item 1 -->
+<div class="flex items-center gap-3 p-3 border-b-2 border-ink border-dashed hover:bg-background-light transition-colors group">
+<div class="w-12 h-12 border-2 border-ink bg-tertiary flex items-center justify-center shadow-hard-sm group-hover:translate-x-[1px] group-hover:translate-y-[1px] group-hover:shadow-none transition-all">
+<span class="material-symbols-outlined">fastfood</span>
+</div>
+<div class="flex-1 flex flex-col">
+<span class="font-bold text-lg leading-none">UBER EATS</span>
+<span class="font-mono text-xs text-gray-500">2:45 AM • MUNCHIES</span>
+</div>
+<span class="font-mono font-bold text-secondary text-lg">-$45.00</span>
+</div>
+<!-- Item 2 -->
+<div class="flex items-center gap-3 p-3 border-b-2 border-ink border-dashed hover:bg-background-light transition-colors group">
+<div class="w-12 h-12 border-2 border-ink bg-primary flex items-center justify-center shadow-hard-sm group-hover:translate-x-[1px] group-hover:translate-y-[1px] group-hover:shadow-none transition-all">
+<span class="material-symbols-outlined">sports_esports</span>
+</div>
+<div class="flex-1 flex flex-col">
+<span class="font-bold text-lg leading-none">STEAM GAMES</span>
+<span class="font-mono text-xs text-gray-500">HL3 CONFIRMED?</span>
+</div>
+<span class="font-mono font-bold text-secondary text-lg">-$60.00</span>
+</div>
+<!-- Item 3 -->
+<div class="flex items-center gap-3 p-3 hover:bg-background-light transition-colors group">
+<div class="w-12 h-12 border-2 border-ink bg-white flex items-center justify-center shadow-hard-sm group-hover:translate-x-[1px] group-hover:translate-y-[1px] group-hover:shadow-none transition-all">
+<span class="material-symbols-outlined">payments</span>
+</div>
+<div class="flex-1 flex flex-col">
+<span class="font-bold text-lg leading-none">FREELANCE</span>
+<span class="font-mono text-xs text-gray-500">CLIENT PAID UP</span>
+</div>
+<span class="font-mono font-bold text-green-600 text-lg">+$500.00</span>
+</div>
+</div>
+<button class="w-full py-3 bg-background-light border-2 border-ink font-mono font-bold text-sm uppercase hover:bg-ink hover:text-white transition-colors">
+                View The Damage -&gt;
+            </button>
+</section>
+</main>
+<!-- FAB -->
+<button class="fixed bottom-24 right-5 w-16 h-16 bg-primary border-3 border-ink shadow-hard-xl flex items-center justify-center z-40 active:translate-x-[4px] active:translate-y-[4px] active:shadow-none transition-all">
+<span class="material-symbols-outlined !text-4xl font-bold">add</span>
+</button>
+<!-- Bottom Nav -->
+<nav class="fixed bottom-0 left-0 w-full bg-white border-t-3 border-ink flex justify-between px-6 pb-6 pt-3 z-30">
+<a class="flex flex-col items-center gap-1 group" href="#">
+<div class="w-12 h-8 flex items-center justify-center rounded-full bg-ink text-primary border-2 border-ink transition-transform group-hover:-translate-y-1">
+<span class="material-symbols-outlined">home</span>
+</div>
+<span class="font-mono text-[10px] font-bold">HOME</span>
+</a>
+<a class="flex flex-col items-center gap-1 group opacity-50 hover:opacity-100 transition-opacity" href="#">
+<div class="w-12 h-8 flex items-center justify-center rounded-full bg-transparent border-2 border-transparent group-hover:border-ink group-hover:bg-tertiary group-hover:text-ink transition-all">
+<span class="material-symbols-outlined">receipt_long</span>
+</div>
+<span class="font-mono text-[10px] font-bold">TAPE</span>
+</a>
+<a class="flex flex-col items-center gap-1 group opacity-50 hover:opacity-100 transition-opacity" href="#">
+<div class="w-12 h-8 flex items-center justify-center rounded-full bg-transparent border-2 border-transparent group-hover:border-ink group-hover:bg-secondary group-hover:text-white transition-all">
+<span class="material-symbols-outlined">pie_chart</span>
+</div>
+<span class="font-mono text-[10px] font-bold">STATS</span>
+</a>
+</nav>
+</body></html>

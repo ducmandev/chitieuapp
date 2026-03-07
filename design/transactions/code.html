@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Paper Trail - Neobrutalism Finance</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;family=Space+Mono:ital,wght@0,400;0,700;1,400&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#f2eb0d", // Warning Yellow
+                        "secondary": "#FF00D6", // Electric Pink
+                        "tertiary": "#00D1FF", // Cyan
+                        "background-light": "#F2F0E9", // Off-white/Bone
+                        "background-dark": "#222210",
+                    },
+                    fontFamily: {
+                        "display": ["Space Grotesk", "sans-serif"],
+                        "mono": ["Space Mono", "monospace"],
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.5rem",
+                        "lg": "1rem",
+                        "xl": "1.5rem",
+                        "full": "9999px"
+                    },
+                    boxShadow: {
+                        "hard": "4px 4px 0px 0px #000000",
+                        "hard-sm": "2px 2px 0px 0px #000000",
+                        "hard-lg": "6px 6px 0px 0px #000000",
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        /* Custom jagged edge pattern using CSS gradients */
+        .jagged-bottom {
+            background-image: linear-gradient(135deg, transparent 50%, white 50%), linear-gradient(45deg, white 50%, transparent 50%);
+            background-position: bottom left, bottom left;
+            background-size: 20px 20px;
+            background-repeat: repeat-x;
+            padding-bottom: 20px;
+        }
+        
+        .receipt-texture {
+            background-color: #ffffff;
+            background-image: radial-gradient(#e5e5e5 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+
+        /* Hide scrollbar for cleaner look */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display text-black h-screen flex flex-col overflow-hidden selection:bg-secondary selection:text-white">
+<!-- Header -->
+<header class="flex-none bg-white border-b-[3px] border-black p-4 z-20 relative">
+<div class="flex items-center justify-between">
+<button class="flex items-center justify-center size-10 bg-white border-[3px] border-black shadow-hard active:translate-y-1 active:shadow-hard-sm transition-all hover:bg-primary">
+<span class="material-symbols-outlined font-bold">arrow_back</span>
+</button>
+<h1 class="text-2xl font-black uppercase tracking-tighter">Paper Trail</h1>
+<button class="flex items-center justify-center size-10 bg-white border-[3px] border-black shadow-hard active:translate-y-1 active:shadow-hard-sm transition-all hover:bg-primary">
+<span class="material-symbols-outlined font-bold">filter_alt</span>
+</button>
+</div>
+</header>
+<!-- Main Content: The Receipt Feed -->
+<main class="flex-1 overflow-y-auto no-scrollbar relative flex flex-col items-center pt-6 pb-24 px-4">
+<!-- Receipt Container -->
+<div class="w-full max-w-md relative group">
+<!-- Receipt Top Decoration -->
+<div class="h-4 bg-[#1a1a1a] w-[95%] mx-auto rounded-t-sm"></div>
+<div class="h-2 bg-[#4a4a4a] w-[90%] mx-auto"></div>
+<!-- The Paper Roll -->
+<div class="bg-white border-x-[3px] border-black shadow-hard-lg receipt-texture relative z-10">
+<!-- Receipt Header Info -->
+<div class="p-6 border-b-[3px] border-black border-dashed text-center">
+<div class="inline-block border-[3px] border-black p-2 mb-2 rotate-2 bg-primary">
+<span class="material-symbols-outlined text-4xl">receipt_long</span>
+</div>
+<h2 class="font-mono text-sm uppercase tracking-widest text-gray-500 mb-1">Statement of Regret</h2>
+<p class="font-black text-3xl">TOTAL: <span class="text-secondary">-$4,250.00</span></p>
+</div>
+<!-- Date Separator: TODAY -->
+<div class="bg-black text-white p-2 flex justify-between items-center sticky top-0 z-20 border-y-[3px] border-black">
+<span class="font-mono font-bold text-lg tracking-wider">[ TODAY ]</span>
+<span class="font-mono text-sm opacity-80">OCT 24</span>
+</div>
+<!-- Transaction Item 1 -->
+<div class="flex items-center gap-4 p-4 hover:bg-primary/20 transition-colors group/item cursor-pointer">
+<div class="size-12 border-[3px] border-black flex items-center justify-center bg-tertiary shadow-hard-sm group-hover/item:translate-x-[1px] group-hover/item:translate-y-[1px] group-hover/item:shadow-none transition-all">
+<span class="material-symbols-outlined">lunch_dining</span>
+</div>
+<div class="flex-1 min-w-0">
+<h3 class="font-bold text-lg leading-none truncate">SHAKE SHACK</h3>
+<p class="font-mono text-xs text-gray-500 mt-1 truncate">FOOD &amp; DINING • 12:42 PM</p>
+</div>
+<div class="text-right">
+<span class="font-mono font-bold text-lg text-secondary">-$24.50</span>
+</div>
+</div>
+<!-- Dotted Divider -->
+<div class="mx-4 border-b-2 border-black border-dotted opacity-30"></div>
+<!-- Transaction Item 2 -->
+<div class="flex items-center gap-4 p-4 hover:bg-primary/20 transition-colors group/item cursor-pointer">
+<div class="size-12 border-[3px] border-black flex items-center justify-center bg-primary shadow-hard-sm group-hover/item:translate-x-[1px] group-hover/item:translate-y-[1px] group-hover/item:shadow-none transition-all">
+<span class="material-symbols-outlined">local_taxi</span>
+</div>
+<div class="flex-1 min-w-0">
+<h3 class="font-bold text-lg leading-none truncate">UBER TECHNOLOGIES</h3>
+<p class="font-mono text-xs text-gray-500 mt-1 truncate">TRANSPORT • 09:15 AM</p>
+</div>
+<div class="text-right">
+<span class="font-mono font-bold text-lg text-secondary">-$18.99</span>
+</div>
+</div>
+<!-- Date Separator: YESTERDAY -->
+<div class="bg-black text-white p-2 flex justify-between items-center sticky top-0 z-20 border-y-[3px] border-black mt-2">
+<span class="font-mono font-bold text-lg tracking-wider">[ YESTERDAY ]</span>
+<span class="font-mono text-sm opacity-80">OCT 23</span>
+</div>
+<!-- Transaction Item 3 (Income) -->
+<div class="flex items-center gap-4 p-4 hover:bg-primary/20 transition-colors group/item cursor-pointer">
+<div class="size-12 border-[3px] border-black flex items-center justify-center bg-secondary shadow-hard-sm text-white group-hover/item:translate-x-[1px] group-hover/item:translate-y-[1px] group-hover/item:shadow-none transition-all">
+<span class="material-symbols-outlined">payments</span>
+</div>
+<div class="flex-1 min-w-0">
+<h3 class="font-bold text-lg leading-none truncate">FREELANCE GIG</h3>
+<p class="font-mono text-xs text-gray-500 mt-1 truncate">INCOME • 4:20 PM</p>
+</div>
+<div class="text-right">
+<span class="font-mono font-bold text-lg text-tertiary">+$850.00</span>
+</div>
+</div>
+<!-- Dotted Divider -->
+<div class="mx-4 border-b-2 border-black border-dotted opacity-30"></div>
+<!-- Transaction Item 4 -->
+<div class="flex items-center gap-4 p-4 hover:bg-primary/20 transition-colors group/item cursor-pointer">
+<div class="size-12 border-[3px] border-black flex items-center justify-center bg-white shadow-hard-sm group-hover/item:translate-x-[1px] group-hover/item:translate-y-[1px] group-hover/item:shadow-none transition-all">
+<span class="material-symbols-outlined">shopping_bag</span>
+</div>
+<div class="flex-1 min-w-0">
+<h3 class="font-bold text-lg leading-none truncate">UNIQLO</h3>
+<p class="font-mono text-xs text-gray-500 mt-1 truncate">CLOTHING • 1:15 PM</p>
+</div>
+<div class="text-right">
+<span class="font-mono font-bold text-lg text-secondary">-$112.40</span>
+</div>
+</div>
+<!-- Dotted Divider -->
+<div class="mx-4 border-b-2 border-black border-dotted opacity-30"></div>
+<!-- Transaction Item 5 -->
+<div class="flex items-center gap-4 p-4 hover:bg-primary/20 transition-colors group/item cursor-pointer">
+<div class="size-12 border-[3px] border-black flex items-center justify-center bg-tertiary shadow-hard-sm group-hover/item:translate-x-[1px] group-hover/item:translate-y-[1px] group-hover/item:shadow-none transition-all">
+<span class="material-symbols-outlined">videogame_asset</span>
+</div>
+<div class="flex-1 min-w-0">
+<h3 class="font-bold text-lg leading-none truncate">STEAM GAMES</h3>
+<p class="font-mono text-xs text-gray-500 mt-1 truncate">ENTERTAINMENT • 11:00 AM</p>
+</div>
+<div class="text-right">
+<span class="font-mono font-bold text-lg text-secondary">-$59.99</span>
+</div>
+</div>
+<!-- Date Separator: OCT 21 -->
+<div class="bg-black text-white p-2 flex justify-between items-center sticky top-0 z-20 border-y-[3px] border-black mt-2">
+<span class="font-mono font-bold text-lg tracking-wider">[ OCT 21 ]</span>
+<span class="font-mono text-sm opacity-80">2023</span>
+</div>
+<!-- Transaction Item 6 -->
+<div class="flex items-center gap-4 p-4 hover:bg-primary/20 transition-colors group/item cursor-pointer">
+<div class="size-12 border-[3px] border-black flex items-center justify-center bg-primary shadow-hard-sm group-hover/item:translate-x-[1px] group-hover/item:translate-y-[1px] group-hover/item:shadow-none transition-all">
+<span class="material-symbols-outlined">local_cafe</span>
+</div>
+<div class="flex-1 min-w-0">
+<h3 class="font-bold text-lg leading-none truncate">BLUE BOTTLE</h3>
+<p class="font-mono text-xs text-gray-500 mt-1 truncate">COFFEE • 8:30 AM</p>
+</div>
+<div class="text-right">
+<span class="font-mono font-bold text-lg text-secondary">-$6.50</span>
+</div>
+</div>
+<!-- Empty State / End of List Decoration -->
+<div class="p-8 text-center border-t-[3px] border-black border-dashed mt-4 bg-gray-50">
+<div class="inline-flex justify-center items-center mb-4 relative">
+<!-- Fly illustration using icons -->
+<span class="material-symbols-outlined text-4xl absolute -top-6 -right-4 rotate-12 animate-bounce">bug_report</span>
+<span class="material-symbols-outlined text-6xl text-gray-400">account_balance_wallet</span>
+</div>
+<h3 class="font-black text-xl mb-1">END OF THE LINE</h3>
+<p class="font-mono text-xs text-gray-500">NO MORE REGRETS TO SHOW.</p>
+</div>
+<!-- Jagged Bottom Edge -->
+<div class="h-6 w-full jagged-bottom border-t-[3px] border-black bg-white absolute -bottom-6 left-[-3px] right-[-3px] border-x-[3px] z-10" style="width: calc(100% + 6px);"></div>
+</div>
+<!-- Shadow element for depth behind receipt -->
+<div class="absolute top-2 left-2 w-full h-full bg-black -z-10 rounded-sm"></div>
+</div>
+<!-- Bottom Spacer -->
+<div class="h-24"></div>
+</main>
+<!-- Floating Action Button (FAB) -->
+<div class="fixed bottom-24 right-6 z-50">
+<button class="size-16 bg-primary border-[3px] border-black shadow-hard-lg flex items-center justify-center active:translate-y-1 active:shadow-hard transition-all group hover:rotate-3">
+<span class="material-symbols-outlined text-4xl font-bold group-hover:scale-110 transition-transform">add</span>
+</button>
+</div>
+<!-- Bottom Navigation Bar -->
+<div class="flex-none fixed bottom-0 w-full z-40">
+<div class="relative flex h-auto w-full flex-col bg-white border-t-[3px] border-black">
+<div class="flex gap-2 bg-white px-4 pb-4 pt-3">
+<a class="just flex flex-1 flex-col items-center justify-end gap-1 text-black group" href="#">
+<div class="flex h-8 items-center justify-center p-1 border-2 border-transparent group-hover:bg-tertiary group-hover:border-black group-hover:shadow-hard-sm transition-all rounded-none">
+<span class="material-symbols-outlined">home</span>
+</div>
+</a>
+<a class="just flex flex-1 flex-col items-center justify-end gap-1 text-black group" href="#">
+<div class="flex h-8 items-center justify-center p-1 border-2 border-transparent group-hover:bg-tertiary group-hover:border-black group-hover:shadow-hard-sm transition-all rounded-none">
+<span class="material-symbols-outlined">pie_chart</span>
+</div>
+</a>
+<a class="just flex flex-1 flex-col items-center justify-end gap-1 text-black" href="#">
+<div class="flex size-10 items-center justify-center bg-black text-white border-2 border-black shadow-hard-sm -mt-6">
+<span class="material-symbols-outlined text-[24px]">receipt_long</span>
+</div>
+</a>
+<a class="just flex flex-1 flex-col items-center justify-end gap-1 text-black group" href="#">
+<div class="flex h-8 items-center justify-center p-1 border-2 border-transparent group-hover:bg-tertiary group-hover:border-black group-hover:shadow-hard-sm transition-all rounded-none">
+<span class="material-symbols-outlined">person</span>
+</div>
+</a>
+<a class="just flex flex-1 flex-col items-center justify-end gap-1 text-black group" href="#">
+<div class="flex h-8 items-center justify-center p-1 border-2 border-transparent group-hover:bg-tertiary group-hover:border-black group-hover:shadow-hard-sm transition-all rounded-none">
+<span class="material-symbols-outlined">settings</span>
+</div>
+</a>
+</div>
+</div>
+</div>
+</body></html>
