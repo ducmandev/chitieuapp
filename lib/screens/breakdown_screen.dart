@@ -281,7 +281,7 @@ class _BreakdownScreenState extends State<BreakdownScreen> {
                     child: Text(
                       loc.month,
                       style: NeoTypography.textTheme.titleMedium?.copyWith(
-                        color: neo.textMain,
+                        color: isMonth ? NeoColors.ink : neo.textMain,
                       ),
                     ),
                   ),
@@ -307,7 +307,7 @@ class _BreakdownScreenState extends State<BreakdownScreen> {
                     child: Text(
                       loc.year,
                       style: NeoTypography.textTheme.titleMedium?.copyWith(
-                        color: neo.textMain,
+                        color: !isMonth ? NeoColors.ink : neo.textMain,
                       ),
                     ),
                   ),
@@ -332,7 +332,9 @@ class _BreakdownScreenState extends State<BreakdownScreen> {
             child: Container(
               height: 40,
               decoration: BoxDecoration(
-                color: _viewMode == _ViewMode.expense ? neo.ink : neo.surface,
+                color: _viewMode == _ViewMode.expense
+                    ? NeoColors.ink
+                    : neo.surface,
                 border: Border.all(color: neo.ink, width: 2),
               ),
               alignment: Alignment.center,
@@ -355,7 +357,9 @@ class _BreakdownScreenState extends State<BreakdownScreen> {
             child: Container(
               height: 40,
               decoration: BoxDecoration(
-                color: _viewMode == _ViewMode.income ? neo.ink : neo.surface,
+                color: _viewMode == _ViewMode.income
+                    ? NeoColors.ink
+                    : neo.surface,
                 border: Border(
                   top: BorderSide(color: neo.ink, width: 2),
                   bottom: BorderSide(color: neo.ink, width: 2),
@@ -407,7 +411,7 @@ class _BreakdownScreenState extends State<BreakdownScreen> {
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             decoration: BoxDecoration(
-              color: neo.ink,
+              color: NeoColors.ink,
               border: Border.all(color: neo.ink, width: 3),
               boxShadow: [
                 BoxShadow(color: neo.ink, offset: const Offset(4, 4)),

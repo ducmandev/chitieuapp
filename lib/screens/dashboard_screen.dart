@@ -421,15 +421,22 @@ class DashboardScreen extends StatelessWidget {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
-                        '${AppLocalizations.of(context)!.spent}: ${_formatCurrency(spent, provider.currencySymbol)}',
-                        style: NeoTypography.mono.copyWith(
-                          fontWeight: FontWeight.bold,
-                          color: neo.inkOnCard,
+                      Container(
+                        color: NeoColors.ink,
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 4,
+                        ),
+                        child: Text(
+                          '${AppLocalizations.of(context)!.spent}: ${_formatCurrency(spent, provider.currencySymbol)}',
+                          style: NeoTypography.mono.copyWith(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
                         ),
                       ),
                       Container(
-                        color: neo.inkOnCard,
+                        color: NeoColors.ink,
                         padding: const EdgeInsets.symmetric(
                           horizontal: 12,
                           vertical: 4,
@@ -437,7 +444,7 @@ class DashboardScreen extends StatelessWidget {
                         child: Text(
                           '${AppLocalizations.of(context)!.left}: ${_formatCurrency(left, provider.currencySymbol)}',
                           style: NeoTypography.mono.copyWith(
-                            color: neo.surface,
+                            color: Colors.white,
                             fontWeight: FontWeight.bold,
                           ),
                         ),

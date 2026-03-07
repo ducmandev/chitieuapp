@@ -34,11 +34,11 @@ class NeoThemeData extends ThemeExtension<NeoThemeData> {
 
   static const NeoThemeData light = NeoThemeData(
     background: NeoColors.backgroundLight,
-    surface: Color(0xFFFFFFFF),
-    textMain: NeoColors.ink,
-    textSub: Color(0xFF555555),
-    ink: NeoColors.ink,
-    inkOnCard: NeoColors.ink,
+    surface: NeoColors.surfaceLight,
+    textMain: NeoColors.textMainLight,
+    textSub: NeoColors.textSubLight,
+    ink: NeoColors.inkLight,
+    inkOnCard: NeoColors.inkLight,
     primary: NeoColors.primary,
     secondary: NeoColors.secondary,
     tertiary: NeoColors.tertiary,
@@ -47,12 +47,12 @@ class NeoThemeData extends ThemeExtension<NeoThemeData> {
   );
 
   static const NeoThemeData dark = NeoThemeData(
-    background: Color(0xFF111111),
-    surface: Color(0xFF1E1E1E),
-    textMain: Color(0xFFF2F0E9),
-    textSub: Color(0xFF9E9E9E),
-    ink: Color(0xFFF2F0E9), // inverted — visible on dark bg
-    inkOnCard: Color(0xFF000000), // stays black so borders show on dark cards
+    background: NeoColors.backgroundDark,
+    surface: NeoColors.surfaceDark,
+    textMain: NeoColors.textMainDark,
+    textSub: NeoColors.textSubDark,
+    ink: NeoColors.inkDark, // inverted — visible on dark bg
+    inkOnCard: NeoColors.inkDark, // stays bright so borders show on dark cards
     primary: NeoColors.primary,
     secondary: NeoColors.secondary,
     tertiary: NeoColors.tertiary,
