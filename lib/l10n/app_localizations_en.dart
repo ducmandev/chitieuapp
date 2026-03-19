@@ -282,7 +282,31 @@ class AppLocalizationsEn extends AppLocalizations {
   String get loginWithAccount => 'LOGIN WITH ACCOUNT';
 
   @override
-  String get noExpenses => 'NO EXPENSES YET';
+  String get appLockBackground => 'APP LOCK';
+
+  @override
+  String get appLockBackgroundDesc => 'Require auth when resuming app';
+
+  @override
+  String get totalBlownYear => 'TOTAL BLOWN THIS YEAR';
+
+  @override
+  String get noExpenses => 'No expenses recorded';
+
+  @override
+  String get expense => 'EXPENSE';
+
+  @override
+  String get totalIncome => 'TOTAL INCOME';
+
+  @override
+  String get noIncome => 'No income recorded';
+
+  @override
+  String get incomeZones => 'INCOME ZONES';
+
+  @override
+  String get calendarComingSoon => 'Calendar feature coming soon!';
 
   @override
   String get overLimit => 'OVER LIMIT';
@@ -291,65 +315,38 @@ class AppLocalizationsEn extends AppLocalizations {
   String get violation => 'VIOLATION';
 
   @override
-  String get calendarComingSoon => 'Calendar feature coming soon...';
-
-  @override
-  String get incomeZones => 'INCOME ZONES';
-
-  @override
-  String get totalIncome => 'TOTAL EARNED';
-
-  @override
-  String get statsThisMonth => 'STATS';
-
-  @override
-  String get noIncome => 'NO INCOME YET';
-
-  @override
-  String get expense => 'EXPENSE';
-
-  @override
-  String get totalBlownYear => 'TOTAL BLOWN THIS YEAR';
-
-  @override
   String get editProfile => 'EDIT PROFILE';
-
-  @override
-  String get changePassword => 'CHANGE PASSWORD';
-
-  @override
-  String get currentPassword => 'CURRENT PASSWORD';
-
-  @override
-  String get newPassword => 'NEW PASSWORD';
-
-  @override
-  String get confirmNewPassword => 'CONFIRM NEW PASSWORD';
-
-  @override
-  String get saveChanges => 'SAVE CHANGES';
-
-  @override
-  String get profilePhoto => 'PROFILE PHOTO';
-
-  @override
-  String get displayName => 'DISPLAY NAME';
-
-  @override
-  String get passwordChanged => 'Password updated successfully!';
-
-  @override
-  String get passwordMismatch => 'New passwords do not match.';
-
-  @override
-  String get wrongPassword => 'Current password is incorrect.';
-
-  @override
-  String get tapToChange => 'TAP TO CHANGE';
 
   @override
   String get currency => 'CURRENCY';
 
   @override
-  String get userProfile2 => 'PROFILE';
+  String get passwordMismatch => 'Passwords do not match.';
+
+  @override
+  String get passwordChanged => 'Password changed successfully.';
+
+  @override
+  String get wrongPassword => 'Current password is incorrect.';
+
+  @override
+  String get displayName => 'DISPLAY NAME';
+
+  @override
+  String get saveChanges => 'SAVE CHANGES';
+
+  @override
+  String get changePassword => 'CHANGE PASSWORD';
+
+  @override
+  String get currentPassword => 'Current Password';
+
+  @override
+  String get newPassword => 'New Password';
+
+  @override
+  String get confirmNewPassword => 'Confirm New Password';
+
+  @override
+  String get tapToChange => 'Tap to change avatar';
 }

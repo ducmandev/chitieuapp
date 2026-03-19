@@ -96,8 +96,7 @@ class AppLocalizationsVi extends AppLocalizations {
   String get left => 'CÒN LẠI';
 
   @override
-  String get latestRegrets =>
-      'NHỮNG NIỀM ĐAU GẦN NHẤT /// TIỀN ĐÃ ĐI VỀ ĐÂU? ///';
+  String get latestRegrets => 'NHỮNG NIỀM ĐAU GẦN NHẤT /// TIỀN ĐÃ ĐI VỀ ĐÂU? ///';
 
   @override
   String get noRegretsYet => 'CHƯA CÓ NIỀM ĐAU NÀO.';
@@ -283,7 +282,31 @@ class AppLocalizationsVi extends AppLocalizations {
   String get loginWithAccount => 'ĐĂNG NHẬP BẰNG TÀI KHOẢN';
 
   @override
-  String get noExpenses => 'CHƯA CÓ CHI TIÊU NÀO';
+  String get appLockBackground => 'KHÓA ỨNG DỤNG';
+
+  @override
+  String get appLockBackgroundDesc => 'Yêu cầu xác thực khi mở lại';
+
+  @override
+  String get totalBlownYear => 'TỔNG SỐ ĐÃ THỔI BAY NĂM NAY';
+
+  @override
+  String get noExpenses => 'Chưa có chi tiêu nào';
+
+  @override
+  String get expense => 'CHI TIÊU';
+
+  @override
+  String get totalIncome => 'TỔNG THU NHẬP';
+
+  @override
+  String get noIncome => 'Chưa có thu nhập nào';
+
+  @override
+  String get incomeZones => 'CÁC KHOẢN THU';
+
+  @override
+  String get calendarComingSoon => 'Tính năng lịch sẽ sớm ra mắt!';
 
   @override
   String get overLimit => 'VƯỢT HẠN MỨC';
@@ -292,65 +315,38 @@ class AppLocalizationsVi extends AppLocalizations {
   String get violation => 'VI PHẠM';
 
   @override
-  String get calendarComingSoon => 'Tính năng lịch sắp ra mắt...';
-
-  @override
-  String get incomeZones => 'VÙNG THU NHẬP';
-
-  @override
-  String get totalIncome => 'TỔNG THU NHẬP';
-
-  @override
-  String get statsThisMonth => 'THỐNG KÊ';
-
-  @override
-  String get noIncome => 'CHƯA CÓ THU NHẬP NÀO';
-
-  @override
-  String get expense => 'CHI TIÊU';
-
-  @override
-  String get totalBlownYear => 'TỔNG ĐÃ THỔI BAY NĂM NAY';
-
-  @override
   String get editProfile => 'CHỈNH SỬA HỒ SƠ';
-
-  @override
-  String get changePassword => 'ĐỔI MẬT KHẨU';
-
-  @override
-  String get currentPassword => 'MẬT KHẨU HIỆN TẠI';
-
-  @override
-  String get newPassword => 'MẬT KHẨU MỚI';
-
-  @override
-  String get confirmNewPassword => 'XÁC NHẬN MẬT KHẨU MỚI';
-
-  @override
-  String get saveChanges => 'LƯU THAY ĐỔI';
-
-  @override
-  String get profilePhoto => 'ẢNH ĐẠI DIỆN';
-
-  @override
-  String get displayName => 'TÊN HIỂN THỊ';
-
-  @override
-  String get passwordChanged => 'Đã cập nhật mật khẩu thành công!';
-
-  @override
-  String get passwordMismatch => 'Mật khẩu mới không khớp.';
-
-  @override
-  String get wrongPassword => 'Mật khẩu hiện tại không đúng.';
-
-  @override
-  String get tapToChange => 'NHẤN ĐỂ ĐỔI';
 
   @override
   String get currency => 'TIỀN TỆ';
 
   @override
-  String get userProfile2 => 'HỒ SƠ';
+  String get passwordMismatch => 'Mật khẩu không khớp.';
+
+  @override
+  String get passwordChanged => 'Đã đổi mật khẩu thành công.';
+
+  @override
+  String get wrongPassword => 'Mật khẩu hiện tại không chính xác.';
+
+  @override
+  String get displayName => 'TÊN HIỂN THỊ';
+
+  @override
+  String get saveChanges => 'LƯU THAY ĐỔI';
+
+  @override
+  String get changePassword => 'ĐỔI MẬT KHẨU';
+
+  @override
+  String get currentPassword => 'Mật khẩu hiện tại';
+
+  @override
+  String get newPassword => 'Mật khẩu mới';
+
+  @override
+  String get confirmNewPassword => 'Xác nhận mật khẩu mới';
+
+  @override
+  String get tapToChange => 'Nhấn để đổi ảnh đại diện';
 }

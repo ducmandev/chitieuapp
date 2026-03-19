@@ -8,6 +8,8 @@ import '../widgets/neo_text_field.dart';
 import '../services/prefs_helper.dart';
 import 'register_screen.dart';
 import 'main_layout.dart';
+import 'package:flutter/services.dart';
+import 'package:local_auth/local_auth.dart';
 import 'package:chitieuapp/l10n/app_localizations.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -35,31 +37,101 @@ class _LoginScreenState extends State<LoginScreen> {
     if (username.isEmpty || password.isEmpty) return;
 
     final hasAccount = await PrefsHelper.hasRegisteredUser();
+    if (!context.mounted) return;
+    
     if (!hasAccount) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(AppLocalizations.of(context)!.noAccount)),
-        );
-      }
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(AppLocalizations.of(context)!.noAccount)),
+      );
       return;
     }
 
     final isValid = await PrefsHelper.checkCredentials(username, password);
+    if (!context.mounted) return;
+    
     if (!isValid) {
-      if (mounted) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(const SnackBar(content: Text('Invalid credentials')));
-      }
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Invalid credentials')),
+      );
       return;
     }
 
-    if (!mounted) return;
     await context.read<AppProvider>().login(username, 0.0, 5000000.0);
-    if (mounted) {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => const MainLayout()),
+    if (!context.mounted) return;
+    
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => const MainLayout()),
+    );
+  }
+
+  void _loginWithBiometrics() async {
+    final hasAccount = await PrefsHelper.hasRegisteredUser();
+    if (!context.mounted) return;
+    
+    if (!hasAccount) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(AppLocalizations.of(context)!.noAccount)),
+      );
+      return;
+    }
+
+    // Check if biometric was enabled by the user previously
+    final provider = context.read<AppProvider>();
+    if (!provider.biometricEnabled) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Chưa bật tính năng đăng nhập sinh trắc học'),
+        ),
+      );
+      return;
+    }
+
+    try {
+      final auth = LocalAuthentication();
+      final canCheck = await auth.canCheckBiometrics;
+      final isSupported = await auth.isDeviceSupported();
+      if (!context.mounted) return;
+
+      if (!canCheck && !isSupported) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(AppLocalizations.of(context)!.biometricNotAvailable),
+          ),
+        );
+        return;
+      }
+
+      final loc = AppLocalizations.of(context)!;
+      final didAuthenticate = await auth.authenticate(
+        localizedReason: loc.biometricPrompt,
+        options: const AuthenticationOptions(
+          stickyAuth: true,
+          biometricOnly: false,
+        ),
+      );
+      if (!context.mounted) return;
+
+      if (didAuthenticate) {
+        // Proceed login with a default local session since biometric passed
+        final username = await PrefsHelper.getRegisteredUser() ?? 'User';
+        if (!context.mounted) return;
+        
+        await provider.login(username, 0.0, 5000000.0);
+        if (!context.mounted) return;
+        
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const MainLayout()),
+        );
+      }
+    } on PlatformException catch (e) {
+      debugPrint('Biometric Error: $e');
+      if (!context.mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(AppLocalizations.of(context)!.biometricNotAvailable),
+        ),
       );
     }
   }
@@ -194,6 +266,34 @@ class _LoginScreenState extends State<LoginScreen> {
               letterSpacing: 2,
             ),
           ),
+        ),
+        const SizedBox(height: 16),
+        // Biometric Login Button
+        Builder(
+          builder: (context) {
+            final isBioEnabled = context.watch<AppProvider>().biometricEnabled;
+            if (!isBioEnabled) return const SizedBox.shrink();
+
+            return NeoButton(
+              backgroundColor: neo.surface,
+              padding: const EdgeInsets.symmetric(vertical: 20),
+              onPressed: _loginWithBiometrics,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.fingerprint, color: neo.textMain, size: 28),
+                  const SizedBox(width: 8),
+                  Text(
+                    'SỬ DỤNG SINH TRẮC HỌC',
+                    style: NeoTypography.textTheme.headlineMedium?.copyWith(
+                      color: neo.textMain,
+                      letterSpacing: 1,
+                    ),
+                  ),
+                ],
+              ),
+            );
+          },
         ),
       ],
     );

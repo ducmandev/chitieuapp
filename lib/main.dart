@@ -6,6 +6,7 @@ import 'theme/neo_theme.dart';
 import 'screens/login_screen.dart';
 import 'screens/main_layout.dart';
 import 'screens/biometric_lock_screen.dart';
+import 'widgets/biometric_lifecycle_wrapper.dart';
 import 'providers/app_provider.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:chitieuapp/l10n/app_localizations.dart';
@@ -39,6 +40,9 @@ class MainApp extends StatelessWidget {
         }
 
         return MaterialApp(
+          builder: (context, child) {
+            return BiometricLifecycleWrapper(child: child!);
+          },
           title: 'Neobrutalist Finance',
           debugShowCheckedModeBanner: false,
           locale: provider.locale,

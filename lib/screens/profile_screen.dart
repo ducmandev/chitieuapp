@@ -1,6 +1,8 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:image_picker/image_picker.dart';
 import '../theme/colors.dart';
 import '../theme/neo_theme.dart';
 import '../theme/typography.dart';
@@ -27,6 +29,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   bool _obscureConfirm = true;
   bool _savingName = false;
   bool _savingPassword = false;
+  bool _showPasswordChange = false;
 
   @override
   void initState() {
@@ -45,6 +48,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   // ─── Avatar initials ───────────────────────────────────────────────────────
+
+  Future<void> _pickAvatar() async {
+    final picker = ImagePicker();
+    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+    if (pickedFile != null) {
+      if (mounted) {
+        await context.read<AppProvider>().updateAvatarPath(pickedFile.path);
+        HapticFeedback.lightImpact();
+      }
+    }
+  }
 
   String _initials(String name) {
     final words = name.trim().split(RegExp(r'\s+'));
@@ -182,7 +196,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     padding: const EdgeInsets.fromLTRB(20, 32, 20, 100),
                     children: [
                       // ── Avatar ────────────────────────────────────────
-                      _buildAvatarSection(name, loc, neo),
+                      _buildAvatarSection(name, provider.avatarPath, loc, neo),
                       const SizedBox(height: 40),
 
                       // ── Display name ──────────────────────────────────
@@ -223,64 +237,84 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       const SizedBox(height: 40),
 
                       // ── Password section ──────────────────────────────
-                      _buildSectionLabel(loc.changePassword, context),
-                      const SizedBox(height: 12),
-                      _buildNeoTextField(
-                        controller: _currentPassCtrl,
-                        hint: loc.currentPassword,
-                        icon: Icons.lock_outline,
-                        obscure: _obscureCurrent,
-                        toggleObscure: () =>
-                            setState(() => _obscureCurrent = !_obscureCurrent),
-                        ctx: context,
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          _buildSectionLabel(loc.changePassword, context),
+                          IconButton(
+                            icon: Icon(
+                              _showPasswordChange
+                                  ? Icons.keyboard_arrow_up
+                                  : Icons.keyboard_arrow_down,
+                              color: neo.textMain,
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                _showPasswordChange = !_showPasswordChange;
+                              });
+                            },
+                          ),
+                        ],
                       ),
-                      const SizedBox(height: 12),
-                      _buildNeoTextField(
-                        controller: _newPassCtrl,
-                        hint: loc.newPassword,
-                        icon: Icons.lock,
-                        obscure: _obscureNew,
-                        toggleObscure: () =>
-                            setState(() => _obscureNew = !_obscureNew),
-                        ctx: context,
-                      ),
-                      const SizedBox(height: 12),
-                      _buildNeoTextField(
-                        controller: _confirmPassCtrl,
-                        hint: loc.confirmNewPassword,
-                        icon: Icons.lock_reset,
-                        obscure: _obscureConfirm,
-                        toggleObscure: () =>
-                            setState(() => _obscureConfirm = !_obscureConfirm),
-                        ctx: context,
-                      ),
-                      const SizedBox(height: 12),
-                      AbsorbPointer(
-                        absorbing: _savingPassword,
-                        child: NeoButton(
-                          onPressed: () => _savePassword(),
-                          backgroundColor: neo.ink,
-                          padding: const EdgeInsets.symmetric(vertical: 14),
-                          child: _savingPassword
-                              ? SizedBox(
-                                  width: 20,
-                                  height: 20,
-                                  child: CircularProgressIndicator(
-                                    strokeWidth: 2,
-                                    color: neo.primary,
-                                  ),
-                                )
-                              : Text(
-                                  loc.changePassword,
-                                  style: NeoTypography.mono.copyWith(
-                                    color: neo.primary,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 13,
-                                    letterSpacing: 1.5,
-                                  ),
-                                ),
+                      if (_showPasswordChange) ...[
+                        const SizedBox(height: 12),
+                        _buildNeoTextField(
+                          controller: _currentPassCtrl,
+                          hint: loc.currentPassword,
+                          icon: Icons.lock_outline,
+                          obscure: _obscureCurrent,
+                          toggleObscure: () => setState(
+                              () => _obscureCurrent = !_obscureCurrent),
+                          ctx: context,
                         ),
-                      ),
+                        const SizedBox(height: 12),
+                        _buildNeoTextField(
+                          controller: _newPassCtrl,
+                          hint: loc.newPassword,
+                          icon: Icons.lock,
+                          obscure: _obscureNew,
+                          toggleObscure: () =>
+                              setState(() => _obscureNew = !_obscureNew),
+                          ctx: context,
+                        ),
+                        const SizedBox(height: 12),
+                        _buildNeoTextField(
+                          controller: _confirmPassCtrl,
+                          hint: loc.confirmNewPassword,
+                          icon: Icons.lock_reset,
+                          obscure: _obscureConfirm,
+                          toggleObscure: () => setState(
+                              () => _obscureConfirm = !_obscureConfirm),
+                          ctx: context,
+                        ),
+                        const SizedBox(height: 12),
+                        AbsorbPointer(
+                          absorbing: _savingPassword,
+                          child: NeoButton(
+                            onPressed: () => _savePassword(),
+                            backgroundColor: neo.ink,
+                            padding: const EdgeInsets.symmetric(vertical: 14),
+                            child: _savingPassword
+                                ? SizedBox(
+                                    width: 20,
+                                    height: 20,
+                                    child: CircularProgressIndicator(
+                                      strokeWidth: 2,
+                                      color: neo.primary,
+                                    ),
+                                  )
+                                : Text(
+                                    loc.changePassword,
+                                    style: NeoTypography.mono.copyWith(
+                                      color: neo.primary,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 13,
+                                      letterSpacing: 1.5,
+                                    ),
+                                  ),
+                          ),
+                        ),
+                      ],
 
                       const SizedBox(height: 40),
                       // ── Account info (read-only) ──────────────────────
@@ -344,6 +378,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   Widget _buildAvatarSection(
     String name,
+    String? avatarPath,
     AppLocalizations loc,
     NeoThemeData neo,
   ) {
@@ -352,33 +387,57 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
     return Column(
       children: [
-        Stack(
-          alignment: Alignment.center,
-          children: [
-            // Shadow layer
-            Positioned(
-              top: 8,
-              left: 8,
-              child: Container(width: 100, height: 100, color: neo.ink),
-            ),
-            Container(
-              width: 100,
-              height: 100,
-              decoration: BoxDecoration(
-                color: avatarColor,
-                border: Border.all(color: neo.inkOnCard, width: 3),
+        GestureDetector(
+          onTap: _pickAvatar,
+          child: Stack(
+            alignment: Alignment.center,
+            children: [
+              // Shadow layer
+              Positioned(
+                top: 8,
+                left: 8,
+                child: Container(width: 100, height: 100, color: neo.ink),
               ),
-              alignment: Alignment.center,
-              child: Text(
-                initials,
-                style: NeoTypography.numbers.copyWith(
-                  fontSize: 36,
-                  color: NeoColors.ink,
-                  fontWeight: FontWeight.bold,
+              Container(
+                width: 100,
+                height: 100,
+                decoration: BoxDecoration(
+                  color: avatarPath == null ? avatarColor : neo.inkOnCard,
+                  border: Border.all(color: neo.inkOnCard, width: 3),
+                  image: avatarPath != null
+                      ? DecorationImage(
+                          image: FileImage(File(avatarPath)),
+                          fit: BoxFit.cover,
+                        )
+                      : null,
+                ),
+                alignment: Alignment.center,
+                child: avatarPath == null
+                    ? Text(
+                        initials,
+                        style: NeoTypography.numbers.copyWith(
+                          fontSize: 36,
+                          color: NeoColors.ink,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      )
+                    : null,
+              ),
+              Positioned(
+                bottom: 0,
+                right: 0,
+                child: Container(
+                  padding: const EdgeInsets.all(4),
+                  decoration: BoxDecoration(
+                    color: NeoColors.primary,
+                    border: Border.all(color: neo.inkOnCard, width: 2),
+                    shape: BoxShape.circle,
+                  ),
+                  child: Icon(Icons.edit, size: 16, color: NeoColors.ink),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
         const SizedBox(height: 16),
         Text(

@@ -62,8 +62,7 @@ import 'app_localizations_vi.dart';
 /// be consistent with the languages listed in the AppLocalizations.supportedLocales
 /// property.
 abstract class AppLocalizations {
-  AppLocalizations(String locale)
-    : localeName = intl.Intl.canonicalizedLocale(locale.toString());
+  AppLocalizations(String locale) : localeName = intl.Intl.canonicalizedLocale(locale.toString());
 
   final String localeName;
 
@@ -71,8 +70,7 @@ abstract class AppLocalizations {
     return Localizations.of<AppLocalizations>(context, AppLocalizations);
   }
 
-  static const LocalizationsDelegate<AppLocalizations> delegate =
-      _AppLocalizationsDelegate();
+  static const LocalizationsDelegate<AppLocalizations> delegate = _AppLocalizationsDelegate();
 
   /// A list of this localizations delegate along with the default localizations
   /// delegates.
@@ -84,18 +82,17 @@ abstract class AppLocalizations {
   /// Additional delegates can be added by appending to this list in
   /// MaterialApp. This list does not have to be used at all if a custom list
   /// of delegates is preferred or required.
-  static const List<LocalizationsDelegate<dynamic>> localizationsDelegates =
-      <LocalizationsDelegate<dynamic>>[
-        delegate,
-        GlobalMaterialLocalizations.delegate,
-        GlobalCupertinoLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-      ];
+  static const List<LocalizationsDelegate<dynamic>> localizationsDelegates = <LocalizationsDelegate<dynamic>>[
+    delegate,
+    GlobalMaterialLocalizations.delegate,
+    GlobalCupertinoLocalizations.delegate,
+    GlobalWidgetsLocalizations.delegate,
+  ];
 
   /// A list of this localizations delegate's supported locales.
   static const List<Locale> supportedLocales = <Locale>[
     Locale('en'),
-    Locale('vi'),
+    Locale('vi')
   ];
 
   /// No description provided for @appTitle.
@@ -644,16 +641,64 @@ abstract class AppLocalizations {
   /// **'LOGIN WITH ACCOUNT'**
   String get loginWithAccount;
 
+  /// No description provided for @appLockBackground.
+  ///
+  /// In en, this message translates to:
+  /// **'APP LOCK'**
+  String get appLockBackground;
+
+  /// No description provided for @appLockBackgroundDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Require auth when resuming app'**
+  String get appLockBackgroundDesc;
+
+  /// No description provided for @totalBlownYear.
+  ///
+  /// In en, this message translates to:
+  /// **'TOTAL BLOWN THIS YEAR'**
+  String get totalBlownYear;
+
   /// No description provided for @noExpenses.
   ///
   /// In en, this message translates to:
-  /// **'NO EXPENSES YET'**
+  /// **'No expenses recorded'**
   String get noExpenses;
+
+  /// No description provided for @expense.
+  ///
+  /// In en, this message translates to:
+  /// **'EXPENSE'**
+  String get expense;
+
+  /// No description provided for @totalIncome.
+  ///
+  /// In en, this message translates to:
+  /// **'TOTAL INCOME'**
+  String get totalIncome;
+
+  /// No description provided for @noIncome.
+  ///
+  /// In en, this message translates to:
+  /// **'No income recorded'**
+  String get noIncome;
+
+  /// No description provided for @incomeZones.
+  ///
+  /// In en, this message translates to:
+  /// **'INCOME ZONES'**
+  String get incomeZones;
+
+  /// No description provided for @calendarComingSoon.
+  ///
+  /// In en, this message translates to:
+  /// **'Calendar feature coming soon!'**
+  String get calendarComingSoon;
 
   /// No description provided for @overLimit.
   ///
   /// In en, this message translates to:
-  /// **'YOU ARE {amount} OVER LIMIT.'**
+  /// **'OVER LIMIT'**
   String get overLimit;
 
   /// No description provided for @violation.
@@ -662,66 +707,80 @@ abstract class AppLocalizations {
   /// **'VIOLATION'**
   String get violation;
 
-  /// No description provided for @calendarComingSoon.
+  /// No description provided for @editProfile.
   ///
   /// In en, this message translates to:
-  /// **'Calendar feature coming soon...'**
-  String get calendarComingSoon;
-
-  /// No description provided for @incomeZones.
-  ///
-  /// In en, this message translates to:
-  /// **'INCOME ZONES'**
-  String get incomeZones;
-
-  /// No description provided for @totalIncome.
-  ///
-  /// In en, this message translates to:
-  /// **'TOTAL EARNED'**
-  String get totalIncome;
-
-  /// No description provided for @statsThisMonth.
-  ///
-  /// In en, this message translates to:
-  /// **'STATS'**
-  String get statsThisMonth;
-
-  /// No description provided for @noIncome.
-  ///
-  /// In en, this message translates to:
-  /// **'NO INCOME YET'**
-  String get noIncome;
-
-  /// No description provided for @expense.
-  ///
-  /// In en, this message translates to:
-  /// **'EXPENSE'**
-  String get expense;
-
-  /// No description provided for @totalBlownYear.
-  ///
-  /// In en, this message translates to:
-  /// **'TOTAL BLOWN THIS YEAR'**
-  String get totalBlownYear;
-
+  /// **'EDIT PROFILE'**
   String get editProfile;
-  String get changePassword;
-  String get currentPassword;
-  String get newPassword;
-  String get confirmNewPassword;
-  String get saveChanges;
-  String get profilePhoto;
-  String get displayName;
-  String get passwordChanged;
-  String get passwordMismatch;
-  String get wrongPassword;
-  String get tapToChange;
+
+  /// No description provided for @currency.
+  ///
+  /// In en, this message translates to:
+  /// **'CURRENCY'**
   String get currency;
-  String get userProfile2;
+
+  /// No description provided for @passwordMismatch.
+  ///
+  /// In en, this message translates to:
+  /// **'Passwords do not match.'**
+  String get passwordMismatch;
+
+  /// No description provided for @passwordChanged.
+  ///
+  /// In en, this message translates to:
+  /// **'Password changed successfully.'**
+  String get passwordChanged;
+
+  /// No description provided for @wrongPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Current password is incorrect.'**
+  String get wrongPassword;
+
+  /// No description provided for @displayName.
+  ///
+  /// In en, this message translates to:
+  /// **'DISPLAY NAME'**
+  String get displayName;
+
+  /// No description provided for @saveChanges.
+  ///
+  /// In en, this message translates to:
+  /// **'SAVE CHANGES'**
+  String get saveChanges;
+
+  /// No description provided for @changePassword.
+  ///
+  /// In en, this message translates to:
+  /// **'CHANGE PASSWORD'**
+  String get changePassword;
+
+  /// No description provided for @currentPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Current Password'**
+  String get currentPassword;
+
+  /// No description provided for @newPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'New Password'**
+  String get newPassword;
+
+  /// No description provided for @confirmNewPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm New Password'**
+  String get confirmNewPassword;
+
+  /// No description provided for @tapToChange.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap to change avatar'**
+  String get tapToChange;
 }
 
-class _AppLocalizationsDelegate
-    extends LocalizationsDelegate<AppLocalizations> {
+class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {
   const _AppLocalizationsDelegate();
 
   @override
@@ -730,26 +789,25 @@ class _AppLocalizationsDelegate
   }
 
   @override
-  bool isSupported(Locale locale) =>
-      <String>['en', 'vi'].contains(locale.languageCode);
+  bool isSupported(Locale locale) => <String>['en', 'vi'].contains(locale.languageCode);
 
   @override
   bool shouldReload(_AppLocalizationsDelegate old) => false;
 }
 
 AppLocalizations lookupAppLocalizations(Locale locale) {
+
+
   // Lookup logic when only language code is specified.
   switch (locale.languageCode) {
-    case 'en':
-      return AppLocalizationsEn();
-    case 'vi':
-      return AppLocalizationsVi();
+    case 'en': return AppLocalizationsEn();
+    case 'vi': return AppLocalizationsVi();
   }
 
   throw FlutterError(
     'AppLocalizations.delegate failed to load unsupported locale "$locale". This is likely '
     'an issue with the localizations generation tool. Please file an issue '
     'on GitHub with a reproducible sample app and the gen-l10n configuration '
-    'that was used.',
+    'that was used.'
   );
 }

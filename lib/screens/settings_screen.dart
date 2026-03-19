@@ -1,3 +1,6 @@
+import 'dart:io';
+import 'package:file_picker/file_picker.dart';
+import 'package:csv/csv.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:local_auth/local_auth.dart';
@@ -8,7 +11,10 @@ import '../widgets/neo_card.dart';
 import 'package:chitieuapp/l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 import '../providers/app_provider.dart';
+import '../models/transaction.dart';
+import '../app_config.dart';
 import 'profile_screen.dart';
+import 'login_screen.dart';
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
@@ -43,13 +49,7 @@ class SettingsScreen extends StatelessWidget {
                       const SizedBox(height: 16),
                       _buildLanguageSelect(context),
                       const SizedBox(height: 12),
-                      _buildBiometricToggle(context),
-                      const SizedBox(height: 12),
                       _buildDarkModeToggle(context),
-                      const SizedBox(height: 12),
-                      _buildHapticToggle(context),
-                      const SizedBox(height: 12),
-                      _buildSoundAlertsToggle(context),
                       _buildSectionTitle(
                         context,
                         AppLocalizations.of(context)!.rawData,
@@ -59,7 +59,15 @@ class SettingsScreen extends StatelessWidget {
                       const SizedBox(height: 16),
                       _buildCurrencySelect(context),
                       const SizedBox(height: 16),
-                      _buildExportButton(context),
+                      Row(
+                        children: [
+                          Expanded(child: _buildExportButton(context)),
+                          const SizedBox(width: 12),
+                          Expanded(child: _buildImportButton(context)),
+                        ],
+                      ),
+                      const SizedBox(height: 32),
+                      _buildLogoutButton(context),
                       const SizedBox(height: 32),
                       _buildDangerZoneSection(context),
                     ],
@@ -98,14 +106,17 @@ class SettingsScreen extends StatelessWidget {
               ),
             ),
           ),
-          Container(
-            width: 40,
-            height: 40,
-            decoration: BoxDecoration(
-              color: NeoColors.secondary,
-              border: Border.all(color: neo.ink, width: 2),
+          GestureDetector(
+            onTap: () => _showAdvancedSettings(context),
+            child: Container(
+              width: 40,
+              height: 40,
+              decoration: BoxDecoration(
+                color: NeoColors.secondary,
+                border: Border.all(color: neo.ink, width: 2),
+              ),
+              child: const Icon(Icons.settings, color: Colors.white),
             ),
-            child: const Icon(Icons.settings, color: Colors.white),
           ),
         ],
       ),
@@ -177,18 +188,27 @@ class SettingsScreen extends StatelessWidget {
                       width: 72,
                       height: 72,
                       decoration: BoxDecoration(
-                        color: avatarColor,
+                        color: provider.avatarPath == null ? avatarColor : neo.inkOnCard,
                         border: Border.all(color: neo.inkOnCard, width: 3),
+                        image: provider.avatarPath != null
+                            ? DecorationImage(
+                                image: FileImage(
+                                    File(provider.avatarPath!)),
+                                fit: BoxFit.cover,
+                              )
+                            : null,
                       ),
                       alignment: Alignment.center,
-                      child: Text(
-                        initials.isEmpty ? '?' : initials,
-                        style: NeoTypography.numbers.copyWith(
-                          fontSize: 28,
-                          fontWeight: FontWeight.bold,
-                          color: NeoColors.ink, // Avatar text always black
-                        ),
-                      ),
+                      child: provider.avatarPath == null
+                          ? Text(
+                              initials.isEmpty ? '?' : initials,
+                              style: NeoTypography.numbers.copyWith(
+                                fontSize: 28,
+                                fontWeight: FontWeight.bold,
+                                color: NeoColors.ink, // Avatar text always black
+                              ),
+                            )
+                          : null,
                     ),
                   ],
                 ),
@@ -523,6 +543,122 @@ class SettingsScreen extends StatelessWidget {
     );
   }
 
+  // ─── Toggle: App Lock Background ───────────────────────────────────────────
+
+  Widget _buildAppLockToggle(BuildContext context) {
+    final provider = context.watch<AppProvider>();
+    final isEnabled = provider.appLockEnabled;
+    final loc = AppLocalizations.of(context)!;
+
+    return GestureDetector(
+      onTap: () {
+        context.read<AppProvider>().toggleAppLock(!isEnabled);
+      },
+      child: _buildToggleCard(
+        context,
+        title: loc.appLockBackground,
+        subtitle: loc.appLockBackgroundDesc,
+        isEnabled: isEnabled,
+        leadingIcon: Icons.phonelink_lock,
+        activeTrackColor: NeoColors.tertiary,
+      ),
+    );
+  }
+
+  // ─── Advanced Settings Bottom Sheet ──────────────────────────────────────────
+
+  void _showAdvancedSettings(BuildContext context) {
+    final neo = NeoTheme.of(context);
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      isScrollControlled: true,
+      builder: (sheetContext) => Container(
+        margin: const EdgeInsets.all(16),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              width: 48,
+              height: 5,
+              margin: const EdgeInsets.only(bottom: 12),
+              decoration: BoxDecoration(
+                color: Colors.grey.shade400,
+                borderRadius: BorderRadius.circular(3),
+              ),
+            ),
+            Container(
+              decoration: BoxDecoration(
+                color: neo.surface,
+                border: Border.all(color: neo.inkOnCard, width: 3),
+                boxShadow: [
+                  BoxShadow(color: neo.inkOnCard, offset: const Offset(6, 6)),
+                ],
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Container(
+                    color: neo.inkOnCard,
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 20,
+                      vertical: 14,
+                    ),
+                    child: Text(
+                      'CÀI ĐẶT PHỤ TRỢ',
+                      style: NeoTypography.textTheme.titleLarge?.copyWith(
+                        color: neo.surface,
+                        letterSpacing: 2,
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(20),
+                    child: Consumer<AppProvider>(
+                      builder: (ctx, provider, child) {
+                        return Column(
+                          children: [
+                            _buildBiometricToggle(ctx),
+                            const SizedBox(height: 12),
+                            _buildAppLockToggle(ctx),
+                            const SizedBox(height: 12),
+                            _buildHapticToggle(ctx),
+                            const SizedBox(height: 12),
+                            _buildSoundAlertsToggle(ctx),
+                          ],
+                        );
+                      },
+                    ),
+                  ),
+                  Container(height: 3, color: neo.inkOnCard),
+                  GestureDetector(
+                    onTap: () => Navigator.pop(sheetContext),
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(vertical: 16),
+                      color: neo.surface,
+                      child: Center(
+                        child: Text(
+                          '✕  ĐÓNG',
+                          style: NeoTypography.mono.copyWith(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 13,
+                            letterSpacing: 2,
+                            color: neo.textMain,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   // ─── Toggle: Dark Mode ─────────────────────────────────────────────────────
 
   Widget _buildDarkModeToggle(BuildContext context) {
@@ -654,16 +790,170 @@ class SettingsScreen extends StatelessWidget {
     );
   }
 
-  // ─── Export Button ────────────────────────────────────────────────────────
+  // ─── Export / Import ────────────────────────────────────────────────────────
+
+  Future<void> _exportCsv(BuildContext context) async {
+    final provider = context.read<AppProvider>();
+    final txs = provider.transactions;
+    if (txs.isEmpty) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('No transactions to export.')),
+        );
+      }
+      return;
+    }
+
+    List<List<dynamic>> rows = [
+      ['Title', 'Amount', 'Type', 'Category', 'Date']
+    ];
+
+    for (var tx in txs) {
+      rows.add([
+        tx.title,
+        tx.amount,
+        tx.type,
+        tx.category,
+        tx.date.toIso8601String(),
+      ]);
+    }
+
+    String csvData = CsvCodec().encode(rows);
+
+    try {
+      String? outputFile = await FilePicker.platform.saveFile(
+        dialogTitle: 'Save CSV',
+        fileName: 'chitieu_transactions.csv',
+        type: FileType.custom,
+        allowedExtensions: ['csv'],
+      );
+
+      if (outputFile != null) {
+        final file = File(outputFile);
+        await file.writeAsString(csvData);
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              backgroundColor: NeoColors.success,
+              content: Text('CSV Exported successfully.'),
+            ),
+          );
+        }
+      }
+    } catch (e) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            backgroundColor: NeoColors.error,
+            content: Text('Failed to export CSV: $e'),
+          ),
+        );
+      }
+    }
+  }
+
+  Future<void> _importCsv(BuildContext context) async {
+    try {
+      FilePickerResult? result = await FilePicker.platform.pickFiles(
+        type: FileType.custom,
+        allowedExtensions: ['csv'],
+      );
+
+      if (result != null && result.files.single.path != null) {
+        final file = File(result.files.single.path!);
+        final input = await file.readAsString();
+        List<List<dynamic>> fields =
+            CsvCodec(lineDelimiter: '\n').decode(input);
+
+        if (fields.isEmpty) return;
+        
+        // Remove header
+        final header = fields.removeAt(0);
+        if (header.length < 5) {
+          throw Exception('Invalid CSV format. Missing columns.');
+        }
+
+        List<TransactionModel> newTxs = [];
+        for (var row in fields) {
+          if (row.length < 5) continue;
+          
+          final date = DateTime.tryParse(row[4].toString());
+          if (date != null) {
+            newTxs.add(
+              TransactionModel(
+                title: row[0].toString(),
+                amount: double.tryParse(row[1].toString()) ?? 0,
+                type: row[2].toString(),
+                category: row[3].toString(),
+                date: date,
+              ),
+            );
+          }
+        }
+
+        if (newTxs.isNotEmpty && context.mounted) {
+          await context.read<AppProvider>().importTransactions(newTxs);
+          if (context.mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                backgroundColor: NeoColors.success,
+                content: Text('Imported ${newTxs.length} transactions.'),
+              ),
+            );
+          }
+        }
+      }
+    } catch (e) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            backgroundColor: NeoColors.error,
+            content: Text('Failed to import CSV: $e'),
+          ),
+        );
+      }
+    }
+  }
 
   Widget _buildExportButton(BuildContext context) {
     final loc = AppLocalizations.of(context)!;
     return GestureDetector(
-      onTap: () {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('CSV Export coming soon...')),
-        );
-      },
+      onTap: () => _exportCsv(context),
+      child: Builder(
+        builder: (ctx) {
+          final neo = NeoTheme.of(ctx);
+          return Container(
+            height: 56,
+            decoration: BoxDecoration(
+              color: neo.surface,
+              border: Border.all(color: neo.inkOnCard, width: 3),
+              boxShadow: [
+                BoxShadow(color: neo.inkOnCard, offset: const Offset(4, 4)),
+              ],
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Icon(Icons.upload, size: 24),
+                const SizedBox(width: 8),
+                Text(
+                  loc.exportCsv,
+                  style: NeoTypography.textTheme.titleMedium?.copyWith(
+                    letterSpacing: 1,
+                    fontSize: 14,
+                  ),
+                ),
+              ],
+            ),
+          );
+        },
+      ),
+    );
+  }
+
+  Widget _buildImportButton(BuildContext context) {
+    return GestureDetector(
+      onTap: () => _importCsv(context),
       child: Builder(
         builder: (ctx) {
           final neo = NeoTheme.of(ctx);
@@ -682,15 +972,55 @@ class SettingsScreen extends StatelessWidget {
                 const Icon(Icons.download, size: 24),
                 const SizedBox(width: 8),
                 Text(
-                  loc.exportCsv,
-                  style: NeoTypography.textTheme.titleLarge?.copyWith(
-                    letterSpacing: 2,
+                  'IMPORT CSV', // no localization needed for MVP unless specified
+                  style: NeoTypography.textTheme.titleMedium?.copyWith(
+                    letterSpacing: 1,
+                    fontSize: 14,
                   ),
                 ),
               ],
             ),
           );
         },
+      ),
+    );
+  }
+
+  // ─── Logout Button ─────────────────────────────────────────────────────────
+
+  Widget _buildLogoutButton(BuildContext context) {
+    final loc = AppLocalizations.of(context)!;
+    final neo = NeoTheme.of(context);
+    return GestureDetector(
+      onTap: () {
+        context.read<AppProvider>().logout();
+        Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (_) => const LoginScreen()),
+          (route) => false,
+        );
+      },
+      child: Container(
+        height: 56,
+        decoration: BoxDecoration(
+          color: neo.surface,
+          border: Border.all(color: neo.inkOnCard, width: 3),
+          boxShadow: [
+            BoxShadow(color: neo.inkOnCard, offset: const Offset(4, 4)),
+          ],
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Icon(Icons.logout, size: 24),
+            const SizedBox(width: 8),
+            Text(
+              loc.logout,
+              style: NeoTypography.textTheme.titleLarge?.copyWith(
+                letterSpacing: 2,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -790,7 +1120,7 @@ class SettingsScreen extends StatelessWidget {
         ),
         const SizedBox(height: 24),
         Text(
-          '${loc.version} 1.0.0-BETA_BUILD_99\n${loc.madeWithRage}',
+          '${loc.version} ${AppConfig.fullVersion}\n${loc.madeWithRage}',
           textAlign: TextAlign.center,
           style: NeoTypography.mono.copyWith(
             color: NeoTheme.of(context).textSub,

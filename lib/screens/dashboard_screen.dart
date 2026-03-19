@@ -7,6 +7,7 @@ import '../theme/typography.dart';
 import '../providers/app_provider.dart';
 import '../models/transaction.dart';
 import 'package:chitieuapp/l10n/app_localizations.dart';
+import '../app_config.dart';
 import '../utils/category_utils.dart';
 import 'login_screen.dart';
 
@@ -112,7 +113,7 @@ class DashboardScreen extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                 color: neo.ink,
                 child: Text(
-                  'v2.0',
+                  AppConfig.displayVersion,
                   style: NeoTypography.mono.copyWith(
                     color: neo.background,
                     fontSize: 12,

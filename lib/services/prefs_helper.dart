@@ -22,6 +22,18 @@ class PrefsHelper {
     await prefs.remove(_keyUsername);
   }
 
+  // ─── Avatar ──────────────────────────────────────────────────────────────
+
+  static Future<void> saveAvatarPath(String path) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('avatar_path', path);
+  }
+
+  static Future<String?> getAvatarPath() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString('avatar_path');
+  }
+
   // ─── Balance / Cap ─────────────────────────────────────────────────────────
 
   static Future<void> saveInitialBalance(double balance) async {
@@ -79,6 +91,11 @@ class PrefsHelper {
     return prefs.containsKey('reg_username');
   }
 
+  static Future<String?> getRegisteredUser() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString('reg_username');
+  }
+
   static Future<bool> checkCredentials(String username, String password) async {
     final prefs = await SharedPreferences.getInstance();
     final regUser = prefs.getString('reg_username');
@@ -106,6 +123,18 @@ class PrefsHelper {
   static Future<bool> getBiometricEnabled() async {
     final prefs = await SharedPreferences.getInstance();
     return prefs.getBool('biometric_enabled') ?? false;
+  }
+
+  // ─── App Lock Background ───────────────────────────────────────────────────
+
+  static Future<void> saveAppLockEnabled(bool enabled) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('app_lock_enabled', enabled);
+  }
+
+  static Future<bool> getAppLockEnabled() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getBool('app_lock_enabled') ?? false;
   }
 
   // ─── Dark Mode ─────────────────────────────────────────────────────────────

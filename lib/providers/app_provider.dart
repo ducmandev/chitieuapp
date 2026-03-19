@@ -14,10 +14,12 @@ class AppProvider extends ChangeNotifier {
   Locale _locale = const Locale('en');
   String _currency = 'USD';
   bool _biometricEnabled = false;
+  bool _appLockEnabled = false;
   bool _darkMode = false;
   bool _hapticEnabled = true;
   bool _soundAlerts = true;
   String? _joinDate;
+  String? _avatarPath;
 
   // ─── Getters ────────────────────────────────────────────────────────────────
 
@@ -30,10 +32,12 @@ class AppProvider extends ChangeNotifier {
   Locale get locale => _locale;
   String get currency => _currency;
   bool get biometricEnabled => _biometricEnabled;
+  bool get appLockEnabled => _appLockEnabled;
   bool get darkMode => _darkMode;
   bool get hapticEnabled => _hapticEnabled;
   bool get soundAlerts => _soundAlerts;
   String? get joinDate => _joinDate;
+  String? get avatarPath => _avatarPath;
 
   String get currencySymbol {
     switch (_currency) {
@@ -93,10 +97,12 @@ class AppProvider extends ChangeNotifier {
     final currencyCode = await PrefsHelper.getCurrency();
     _currency = currencyCode ?? 'USD';
     _biometricEnabled = await PrefsHelper.getBiometricEnabled();
+    _appLockEnabled = await PrefsHelper.getAppLockEnabled();
     _darkMode = await PrefsHelper.getDarkMode();
     _hapticEnabled = await PrefsHelper.getHapticEnabled();
     _soundAlerts = await PrefsHelper.getSoundAlerts();
     _joinDate = await PrefsHelper.getJoinDate();
+    _avatarPath = await PrefsHelper.getAvatarPath();
 
     _isLoading = false;
     notifyListeners();
@@ -188,6 +194,12 @@ class AppProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> toggleAppLock(bool enabled) async {
+    await PrefsHelper.saveAppLockEnabled(enabled);
+    _appLockEnabled = enabled;
+    notifyListeners();
+  }
+
   Future<void> toggleDarkMode() async {
     _darkMode = !_darkMode;
     await PrefsHelper.saveDarkMode(_darkMode);
@@ -214,6 +226,22 @@ class AppProvider extends ChangeNotifier {
   Future<void> updateDisplayName(String name) async {
     await PrefsHelper.saveDisplayName(name);
     _displayName = name;
+    notifyListeners();
+  }
+
+  Future<void> updateAvatarPath(String path) async {
+    await PrefsHelper.saveAvatarPath(path);
+    _avatarPath = path;
+    notifyListeners();
+  }
+
+  Future<void> importTransactions(List<TransactionModel> txs) async {
+    for (var tx in txs) {
+      final id = await DatabaseHelper.instance.insertTransaction(tx);
+      tx.id = id == -1 ? DateTime.now().millisecondsSinceEpoch : id;
+      _transactions.add(tx);
+    }
+    _transactions.sort((a, b) => b.date.compareTo(a.date));
     notifyListeners();
   }
 
