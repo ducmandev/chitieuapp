@@ -98,7 +98,7 @@ class DashboardScreen extends StatelessWidget {
               ),
               const SizedBox(width: 8),
               Text(
-                'NEO.CASH',
+                AppLocalizations.of(context)!.appTitle.toUpperCase(),
                 style: NeoTypography.textTheme.displaySmall?.copyWith(
                   fontStyle: FontStyle.italic,
                   letterSpacing: -1.5,
@@ -190,43 +190,60 @@ class DashboardScreen extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                username,
-                style: NeoTypography.mono.copyWith(
-                  color: neo.textSub,
-                  fontSize: 14,
-                  fontWeight: FontWeight.bold,
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                FittedBox(
+                  fit: BoxFit.scaleDown,
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    username,
+                    style: NeoTypography.mono.copyWith(
+                      color: neo.textSub,
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
                 ),
-              ),
-              Text(
-                dateStr,
-                style: NeoTypography.mono.copyWith(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: neo.textMain,
+                FittedBox(
+                  fit: BoxFit.scaleDown,
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    dateStr,
+                    style: NeoTypography.mono.copyWith(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: neo.textMain,
+                    ),
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
-          Transform.rotate(
-            angle: -0.05,
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-              decoration: BoxDecoration(
-                color: isBroke ? neo.error : NeoColors.success,
-                border: Border.all(color: neo.ink),
-              ),
-              child: Text(
-                isBroke
-                    ? AppLocalizations.of(context)!.statusBroke
-                    : AppLocalizations.of(context)!.statusBallin,
-                style: NeoTypography.mono.copyWith(
-                  color: Colors.white,
-                  fontSize: 12,
-                  fontWeight: FontWeight.bold,
+          const SizedBox(width: 8),
+          Flexible(
+            child: Transform.rotate(
+              angle: -0.05,
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                decoration: BoxDecoration(
+                  color: isBroke ? neo.error : NeoColors.success,
+                  border: Border.all(color: neo.ink),
+                ),
+                child: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: Text(
+                    isBroke
+                        ? AppLocalizations.of(context)!.statusBroke
+                        : AppLocalizations.of(context)!.statusBallin,
+                    style: NeoTypography.mono.copyWith(
+                      color: Colors.white,
+                      fontSize: 12,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
                 ),
               ),
             ),
@@ -369,38 +386,46 @@ class DashboardScreen extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
-            Text(
-              AppLocalizations.of(context)!.monthlyCap,
-              style: NeoTypography.textTheme.titleLarge?.copyWith(
-                textBaseline: TextBaseline.alphabetic,
-                color: neo.textMain,
+            Expanded(
+              child: FittedBox(
+                fit: BoxFit.scaleDown,
+                alignment: Alignment.bottomLeft,
+                child: Text(
+                  AppLocalizations.of(context)!.monthlyCap,
+                  style: NeoTypography.textTheme.titleLarge?.copyWith(
+                    textBaseline: TextBaseline.alphabetic,
+                    color: neo.textMain,
+                  ),
+                ),
               ),
             ),
-            Text(
-              '${(pct * 100).toStringAsFixed(0)}${AppLocalizations.of(context)!.fried}',
-              style: NeoTypography.mono.copyWith(
-                fontSize: 14,
-                fontWeight: FontWeight.bold,
-                color: neo.textMain,
+            const SizedBox(width: 8),
+            Flexible(
+              child: Text(
+                '${(pct * 100).toStringAsFixed(0)}${AppLocalizations.of(context)!.fried}',
+                style: NeoTypography.mono.copyWith(
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
+                  color: neo.textMain,
+                ),
               ),
             ),
           ],
         ),
-        const SizedBox(height: 8),
         Container(
-          height: 56,
+          height: 56, // Fixed height for consistent look
           decoration: BoxDecoration(
             color: neo.surface,
             border: Border.all(color: neo.ink, width: 3),
             boxShadow: [BoxShadow(color: neo.ink, offset: const Offset(4, 4))],
           ),
           child: Stack(
-            clipBehavior: Clip.hardEdge,
+            fit: StackFit.expand,
             children: [
+              // Progress fill
               FractionallySizedBox(
                 alignment: Alignment.centerLeft,
                 widthFactor: pct,
-                heightFactor: 1.0,
                 child: Container(
                   decoration: BoxDecoration(
                     color: pct > 0.9 ? neo.error : NeoColors.primary,
@@ -416,42 +441,60 @@ class DashboardScreen extends StatelessWidget {
                   ),
                 ),
               ),
-              Center(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Container(
-                        color: NeoColors.ink,
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 12,
-                          vertical: 4,
-                        ),
-                        child: Text(
-                          '${AppLocalizations.of(context)!.spent}: ${_formatCurrency(spent, provider.currencySymbol)}',
-                          style: NeoTypography.mono.copyWith(
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
+              // Content
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 12),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Expanded(
+                      child: Align(
+                        alignment: Alignment.centerLeft,
+                        child: FittedBox(
+                          fit: BoxFit.scaleDown,
+                          child: Container(
+                            color: NeoColors.ink,
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 8,
+                              vertical: 4,
+                            ),
+                            child: Text(
+                              '${AppLocalizations.of(context)!.spent}: ${_formatCurrency(spent, provider.currencySymbol)}',
+                              style: NeoTypography.mono.copyWith(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                                fontSize: 12,
+                              ),
+                            ),
                           ),
                         ),
                       ),
-                      Container(
-                        color: NeoColors.ink,
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 12,
-                          vertical: 4,
-                        ),
-                        child: Text(
-                          '${AppLocalizations.of(context)!.left}: ${_formatCurrency(left, provider.currencySymbol)}',
-                          style: NeoTypography.mono.copyWith(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
+                    ),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: Align(
+                        alignment: Alignment.centerRight,
+                        child: FittedBox(
+                          fit: BoxFit.scaleDown,
+                          child: Container(
+                            color: NeoColors.ink,
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 8,
+                              vertical: 4,
+                            ),
+                            child: Text(
+                              '${AppLocalizations.of(context)!.left}: ${_formatCurrency(left, provider.currencySymbol)}',
+                              style: NeoTypography.mono.copyWith(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 12,
+                              ),
+                            ),
                           ),
                         ),
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ),
             ],

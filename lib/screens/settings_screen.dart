@@ -1,4 +1,6 @@
+import 'dart:convert';
 import 'dart:io';
+import 'dart:typed_data';
 import 'package:file_picker/file_picker.dart';
 import 'package:csv/csv.dart';
 import 'package:flutter/material.dart';
@@ -606,29 +608,32 @@ class SettingsScreen extends StatelessWidget {
                       vertical: 14,
                     ),
                     child: Text(
-                      'CÀI ĐẶT PHỤ TRỢ',
+                      AppLocalizations.of(context)!.advancedSettings,
                       style: NeoTypography.textTheme.titleLarge?.copyWith(
                         color: neo.surface,
                         letterSpacing: 2,
                       ),
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.all(20),
-                    child: Consumer<AppProvider>(
-                      builder: (ctx, provider, child) {
-                        return Column(
-                          children: [
-                            _buildBiometricToggle(ctx),
-                            const SizedBox(height: 12),
-                            _buildAppLockToggle(ctx),
-                            const SizedBox(height: 12),
-                            _buildHapticToggle(ctx),
-                            const SizedBox(height: 12),
-                            _buildSoundAlertsToggle(ctx),
-                          ],
-                        );
-                      },
+                  Flexible(
+                    child: SingleChildScrollView(
+                      padding: const EdgeInsets.all(16),
+                      child: Consumer<AppProvider>(
+                        builder: (ctx, provider, child) {
+                          return Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              _buildBiometricToggle(ctx),
+                              const SizedBox(height: 12),
+                              _buildAppLockToggle(ctx),
+                              const SizedBox(height: 12),
+                              _buildHapticToggle(ctx),
+                              const SizedBox(height: 12),
+                              _buildSoundAlertsToggle(ctx),
+                            ],
+                          );
+                        },
+                      ),
                     ),
                   ),
                   Container(height: 3, color: neo.inkOnCard),
@@ -639,7 +644,7 @@ class SettingsScreen extends StatelessWidget {
                       color: neo.surface,
                       child: Center(
                         child: Text(
-                          '✕  ĐÓNG',
+                          '✕  ${AppLocalizations.of(context)!.close}',
                           style: NeoTypography.mono.copyWith(
                             fontWeight: FontWeight.bold,
                             fontSize: 13,
@@ -728,38 +733,48 @@ class SettingsScreen extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Row(
-            children: [
-              if (leadingIcon != null) ...[
-                Icon(
-                  leadingIcon,
-                  color: isEnabled ? NeoColors.primary : neo.textMain,
-                  size: 26,
-                ),
-                const SizedBox(width: 12),
-              ],
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    title,
-                    style: NeoTypography.textTheme.titleMedium?.copyWith(
-                      fontSize: 17,
-                      height: 1,
-                    ),
+          Expanded(
+            child: Row(
+              children: [
+                if (leadingIcon != null) ...[
+                  Icon(
+                    leadingIcon,
+                    color: isEnabled ? NeoColors.primary : neo.textMain,
+                    size: 26,
                   ),
-                  const SizedBox(height: 4),
-                  Text(
-                    subtitle,
-                    style: NeoTypography.mono.copyWith(
-                      fontSize: 12,
-                      color: neo.textSub,
-                    ),
-                  ),
+                  const SizedBox(width: 12),
                 ],
-              ),
-            ],
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        title,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: NeoTypography.textTheme.titleMedium?.copyWith(
+                          fontSize: 17,
+                          height: 1.1,
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        subtitle,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: NeoTypography.mono.copyWith(
+                          fontSize: 12,
+                          color: neo.textSub,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ),
+          const SizedBox(width: 12),
           // Neo toggle switch
           Container(
             width: 60,
@@ -826,11 +841,12 @@ class SettingsScreen extends StatelessWidget {
         fileName: 'chitieu_transactions.csv',
         type: FileType.custom,
         allowedExtensions: ['csv'],
+        bytes: Uint8List.fromList(utf8.encode(csvData)),
       );
 
       if (outputFile != null) {
-        final file = File(outputFile);
-        await file.writeAsString(csvData);
+        // On mobile, if we provide bytes, the file is already saved.
+        // On desktop, it returns the path.
         if (context.mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(

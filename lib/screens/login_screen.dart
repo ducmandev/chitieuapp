@@ -51,7 +51,7 @@ class _LoginScreenState extends State<LoginScreen> {
     
     if (!isValid) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Invalid credentials')),
+        SnackBar(content: Text(AppLocalizations.of(context)!.invalidCredentials)),
       );
       return;
     }
@@ -80,8 +80,8 @@ class _LoginScreenState extends State<LoginScreen> {
     final provider = context.read<AppProvider>();
     if (!provider.biometricEnabled) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Chưa bật tính năng đăng nhập sinh trắc học'),
+        SnackBar(
+          content: Text(AppLocalizations.of(context)!.biometricNotEnabled),
         ),
       );
       return;
@@ -240,7 +240,7 @@ class _LoginScreenState extends State<LoginScreen> {
           child: TextButton(
             onPressed: () {
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Feature coming soon...')),
+                SnackBar(content: Text(AppLocalizations.of(context)!.comingSoon)),
               );
             },
             style: TextButton.styleFrom(foregroundColor: neo.textMain),
@@ -284,7 +284,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   Icon(Icons.fingerprint, color: neo.textMain, size: 28),
                   const SizedBox(width: 8),
                   Text(
-                    'SỬ DỤNG SINH TRẮC HỌC',
+                    AppLocalizations.of(context)!.useBiometric,
                     style: NeoTypography.textTheme.headlineMedium?.copyWith(
                       color: neo.textMain,
                       letterSpacing: 1,

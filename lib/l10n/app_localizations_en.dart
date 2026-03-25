@@ -349,4 +349,22 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get tapToChange => 'Tap to change avatar';
+
+  @override
+  String get advancedSettings => 'ADVANCED SETTINGS';
+
+  @override
+  String get close => 'CLOSE';
+
+  @override
+  String get invalidCredentials => 'Invalid credentials';
+
+  @override
+  String get biometricNotEnabled => 'Biometric login is not enabled';
+
+  @override
+  String get comingSoon => 'Feature coming soon...';
+
+  @override
+  String get useBiometric => 'USE BIOMETRICS';
 }

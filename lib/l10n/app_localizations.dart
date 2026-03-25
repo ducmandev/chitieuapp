@@ -778,6 +778,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Tap to change avatar'**
   String get tapToChange;
+
+  /// No description provided for @advancedSettings.
+  ///
+  /// In en, this message translates to:
+  /// **'ADVANCED SETTINGS'**
+  String get advancedSettings;
+
+  /// No description provided for @close.
+  ///
+  /// In en, this message translates to:
+  /// **'CLOSE'**
+  String get close;
+
+  /// No description provided for @invalidCredentials.
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid credentials'**
+  String get invalidCredentials;
+
+  /// No description provided for @biometricNotEnabled.
+  ///
+  /// In en, this message translates to:
+  /// **'Biometric login is not enabled'**
+  String get biometricNotEnabled;
+
+  /// No description provided for @comingSoon.
+  ///
+  /// In en, this message translates to:
+  /// **'Feature coming soon...'**
+  String get comingSoon;
+
+  /// No description provided for @useBiometric.
+  ///
+  /// In en, this message translates to:
+  /// **'USE BIOMETRICS'**
+  String get useBiometric;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

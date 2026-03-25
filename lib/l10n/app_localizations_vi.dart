@@ -349,4 +349,22 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get tapToChange => 'Nhấn để đổi ảnh đại diện';
+
+  @override
+  String get advancedSettings => 'CÀI ĐẶT PHỤ TRỢ';
+
+  @override
+  String get close => 'ĐÓNG';
+
+  @override
+  String get invalidCredentials => 'Thông tin đăng nhập không hợp lệ';
+
+  @override
+  String get biometricNotEnabled => 'Chưa bật tính năng đăng nhập sinh trắc học';
+
+  @override
+  String get comingSoon => 'Tính năng sắp ra mắt...';
+
+  @override
+  String get useBiometric => 'SỬ DỤNG SINH TRẮC HỌC';
 }

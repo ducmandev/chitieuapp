@@ -118,5 +118,11 @@
     "currentPassword": "Current Password",
     "newPassword": "New Password",
     "confirmNewPassword": "Confirm New Password",
-    "tapToChange": "Tap to change avatar"
+    "tapToChange": "Tap to change avatar",
+    "advancedSettings": "ADVANCED SETTINGS",
+    "close": "CLOSE",
+    "invalidCredentials": "Invalid credentials",
+    "biometricNotEnabled": "Biometric login is not enabled",
+    "comingSoon": "Feature coming soon...",
+    "useBiometric": "USE BIOMETRICS"
 }
