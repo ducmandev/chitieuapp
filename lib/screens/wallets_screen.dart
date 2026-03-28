@@ -192,174 +192,935 @@ class WalletsScreen extends StatelessWidget {
   void _showAddWalletDialog(BuildContext context) {
     final neo = NeoTheme.of(context);
     final loc = AppLocalizations.of(context)!;
+    final provider = context.read<AppProvider>();
 
     final nameController = TextEditingController();
     final balanceController = TextEditingController();
     String selectedType = 'cash';
+    IconData selectedIcon = Icons.account_balance_wallet;
+    Color selectedColor = NeoColors.tertiary;
+
+    final walletIcons = [
+      Icons.account_balance_wallet,
+      Icons.money,
+      Icons.account_balance,
+      Icons.credit_card,
+      Icons.savings,
+      Icons.wallet,
+      Icons.payments,
+      Icons.store,
+    ];
+
+    final walletColors = [
+      NeoColors.tertiary,
+      NeoColors.primary,
+      NeoColors.secondary,
+      Colors.orange,
+      Colors.purple,
+      Colors.teal,
+      Colors.pink,
+      Colors.blue,
+    ];
 
     showDialog(
       context: context,
       builder: (context) => StatefulBuilder(
         builder: (context, setDialogState) {
-          return AlertDialog(
-            backgroundColor: neo.surface,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(0),
-              side: BorderSide(color: neo.ink, width: 3),
-            ),
-            title: Text(
-              loc.addWallet,
-              style: NeoTypography.textTheme.headlineSmall,
-            ),
-            content: SingleChildScrollView(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  TextField(
-                    controller: nameController,
-                    decoration: InputDecoration(
-                      labelText: loc.walletName,
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(0),
-                        borderSide: BorderSide(color: neo.ink, width: 2),
+          return Dialog(
+            backgroundColor: neo.background,
+            child: Stack(
+              clipBehavior: Clip.none,
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(24),
+                  decoration: BoxDecoration(
+                    color: neo.surface,
+                    border: Border.all(color: neo.ink, width: 3),
+                    boxShadow: [
+                      BoxShadow(
+                        color: neo.ink,
+                        offset: const Offset(6, 6),
+                        blurRadius: 0,
+                        spreadRadius: 0,
                       ),
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-                  TextField(
-                    controller: balanceController,
-                    keyboardType: TextInputType.number,
-                    decoration: InputDecoration(
-                      labelText: loc.balance,
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(0),
-                        borderSide: BorderSide(color: neo.ink, width: 2),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-                  DropdownButtonFormField<String>(
-                    initialValue: selectedType,
-                    decoration: InputDecoration(
-                      labelText: loc.type,
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(0),
-                        borderSide: BorderSide(color: neo.ink, width: 2),
-                      ),
-                    ),
-                    items: [
-                      DropdownMenuItem(value: 'cash', child: Text(loc.cash)),
-                      DropdownMenuItem(value: 'bank', child: Text(loc.bank)),
-                      DropdownMenuItem(
-                          value: 'credit', child: Text(loc.credit)),
-                      DropdownMenuItem(
-                          value: 'savings', child: Text(loc.savings)),
                     ],
-                    onChanged: (value) {
-                      setDialogState(() {
-                        selectedType = value!;
-                      });
-                    },
                   ),
-                ],
-              ),
+                  child: SingleChildScrollView(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // Header with badge
+                        Row(
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 12,
+                                vertical: 6,
+                              ),
+                              decoration: BoxDecoration(
+                                color: NeoColors.primary,
+                                border:
+                                    Border.all(color: neo.ink, width: 2),
+                              ),
+                              child: Text(
+                                loc.addWallet.toUpperCase(),
+                                style: NeoTypography.mono.copyWith(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.bold,
+                                  color: NeoColors.ink,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 24),
+                        // Wallet Name
+                        Text(
+                          loc.walletName,
+                          style: NeoTypography.mono.copyWith(
+                            fontSize: 12,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        TextField(
+                          controller: nameController,
+                          decoration: InputDecoration(
+                            hintText: loc.walletName,
+                            filled: true,
+                            fillColor: neo.background,
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(0),
+                              borderSide: BorderSide(color: neo.ink, width: 2),
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(0),
+                              borderSide: BorderSide(color: neo.ink, width: 2),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(0),
+                              borderSide:
+                                  BorderSide(color: NeoColors.primary, width: 2),
+                            ),
+                            contentPadding: const EdgeInsets.symmetric(
+                              horizontal: 12,
+                              vertical: 12,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 20),
+                        // Balance
+                        Text(
+                          loc.balance,
+                          style: NeoTypography.mono.copyWith(
+                            fontSize: 12,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        TextField(
+                          controller: balanceController,
+                          keyboardType: TextInputType.number,
+                          decoration: InputDecoration(
+                            prefixText: '${provider.currencySymbol} ',
+                            filled: true,
+                            fillColor: neo.background,
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(0),
+                              borderSide: BorderSide(color: neo.ink, width: 2),
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(0),
+                              borderSide: BorderSide(color: neo.ink, width: 2),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(0),
+                              borderSide:
+                                  BorderSide(color: NeoColors.primary, width: 2),
+                            ),
+                            contentPadding: const EdgeInsets.symmetric(
+                              horizontal: 12,
+                              vertical: 12,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 20),
+                        // Wallet Type
+                        Text(
+                          loc.type,
+                          style: NeoTypography.mono.copyWith(
+                            fontSize: 12,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        Container(
+                          decoration: BoxDecoration(
+                            border: Border.all(color: neo.ink, width: 2),
+                          ),
+                          child: Column(
+                            children: [
+                              _buildTypeOption(
+                                context,
+                                'cash',
+                                loc.cash,
+                                Icons.money,
+                                selectedType,
+                                setDialogState,
+                                (value) => selectedType = value!,
+                                neo,
+                              ),
+                              _buildTypeOption(
+                                context,
+                                'bank',
+                                loc.bank,
+                                Icons.account_balance,
+                                selectedType,
+                                setDialogState,
+                                (value) => selectedType = value!,
+                                neo,
+                              ),
+                              _buildTypeOption(
+                                context,
+                                'credit',
+                                loc.credit,
+                                Icons.credit_card,
+                                selectedType,
+                                setDialogState,
+                                (value) => selectedType = value!,
+                                neo,
+                              ),
+                              _buildTypeOption(
+                                context,
+                                'savings',
+                                loc.savings,
+                                Icons.savings,
+                                selectedType,
+                                setDialogState,
+                                (value) => selectedType = value!,
+                                neo,
+                              ),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(height: 20),
+                        // Icon Selection
+                        Text(
+                          'ICON',
+                          style: NeoTypography.mono.copyWith(
+                            fontSize: 12,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const SizedBox(height: 12),
+                        Wrap(
+                          spacing: 8,
+                          runSpacing: 8,
+                          children: walletIcons.map((icon) {
+                            final isSelected = selectedIcon == icon;
+                            return GestureDetector(
+                              onTap: () {
+                                setDialogState(() {
+                                  selectedIcon = icon;
+                                });
+                              },
+                              child: Container(
+                                width: 48,
+                                height: 48,
+                                decoration: BoxDecoration(
+                                  color: isSelected
+                                      ? NeoColors.primary
+                                      : neo.background,
+                                  border: Border.all(
+                                    color: neo.ink,
+                                    width: isSelected ? 3 : 2,
+                                  ),
+                                  boxShadow: isSelected
+                                      ? [
+                                          BoxShadow(
+                                            color: neo.ink,
+                                            offset: const Offset(2, 2),
+                                            blurRadius: 0,
+                                          ),
+                                        ]
+                                      : null,
+                                ),
+                                child: Icon(
+                                  icon,
+                                  color: isSelected
+                                      ? NeoColors.ink
+                                      : neo.textMain,
+                                  size: 24,
+                                ),
+                              ),
+                            );
+                          }).toList(),
+                        ),
+                        const SizedBox(height: 20),
+                        // Color Selection
+                        Text(
+                          'MÀU SẮC',
+                          style: NeoTypography.mono.copyWith(
+                            fontSize: 12,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const SizedBox(height: 12),
+                        Wrap(
+                          spacing: 12,
+                          runSpacing: 12,
+                          children: walletColors.map((color) {
+                            final isSelected = selectedColor == color;
+                            return GestureDetector(
+                              onTap: () {
+                                setDialogState(() {
+                                  selectedColor = color;
+                                });
+                              },
+                              child: Container(
+                                width: 44,
+                                height: 44,
+                                decoration: BoxDecoration(
+                                  color: color,
+                                  border: Border.all(
+                                    color: neo.ink,
+                                    width: isSelected ? 3 : 2,
+                                  ),
+                                  boxShadow: isSelected
+                                      ? [
+                                          BoxShadow(
+                                            color: neo.ink,
+                                            offset: const Offset(2, 2),
+                                            blurRadius: 0,
+                                          ),
+                                        ]
+                                      : null,
+                                ),
+                                child: isSelected
+                                    ? Icon(Icons.check,
+                                        color: NeoColors.ink, size: 24)
+                                    : null,
+                              ),
+                            );
+                          }).toList(),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                // Action Buttons
+                Positioned(
+                  right: 24,
+                  bottom: -16,
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      _buildNeoButton(
+                        context,
+                        loc.cancel,
+                        NeoColors.secondary,
+                        () => Navigator.pop(context),
+                        neo,
+                      ),
+                      const SizedBox(width: 12),
+                      _buildNeoButton(
+                        context,
+                        loc.add,
+                        NeoColors.primary,
+                        () async {
+                          if (nameController.text.isEmpty) return;
+                          final balance =
+                              double.tryParse(balanceController.text) ?? 0.0;
+                          final wallet = WalletModel(
+                            name: nameController.text,
+                            balance: balance,
+                            type: selectedType,
+                            icon: _getIconString(selectedIcon),
+                            color: selectedColor,
+                          );
+                          await context
+                              .read<AppProvider>()
+                              .addWallet(wallet);
+                          if (context.mounted) Navigator.pop(context);
+                        },
+                        neo,
+                      ),
+                    ],
+                  ),
+                ),
+              ],
             ),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.pop(context),
-                child: Text(loc.cancel),
-              ),
-              ElevatedButton(
-                onPressed: () async {
-                  if (nameController.text.isEmpty) return;
-                  final balance =
-                      double.tryParse(balanceController.text) ?? 0.0;
-                  final wallet = WalletModel(
-                    name: nameController.text,
-                    balance: balance,
-                    type: selectedType,
-                  );
-                  await context.read<AppProvider>().addWallet(wallet);
-                  if (context.mounted) Navigator.pop(context);
-                },
-                child: Text(loc.add),
-              ),
-            ],
           );
         },
       ),
     );
   }
 
+  Widget _buildTypeOption(
+    BuildContext context,
+    String value,
+    String label,
+    IconData icon,
+    String selectedType,
+    Function setDialogState,
+    Function(String?) onChanged,
+    NeoThemeData neo,
+  ) {
+    final isSelected = selectedType == value;
+    return InkWell(
+      onTap: () {
+        setDialogState(() {
+          onChanged(value);
+        });
+      },
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        decoration: BoxDecoration(
+          color: isSelected ? NeoColors.primary : null,
+          border: Border(
+            bottom: BorderSide(color: neo.ink, width: 1),
+          ),
+        ),
+        child: Row(
+          children: [
+            Icon(
+              icon,
+              size: 20,
+              color: isSelected ? NeoColors.ink : neo.textMain,
+            ),
+            const SizedBox(width: 12),
+            Text(
+              label,
+              style: NeoTypography.mono.copyWith(
+                fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                color: isSelected ? NeoColors.ink : neo.textMain,
+              ),
+            ),
+            const Spacer(),
+            if (isSelected)
+              Icon(Icons.check, color: NeoColors.ink, size: 20),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildNeoButton(
+    BuildContext context,
+    String label,
+    Color bgColor,
+    VoidCallback onPressed,
+    NeoThemeData neo,
+  ) {
+    return GestureDetector(
+      onTap: onPressed,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
+        decoration: BoxDecoration(
+          color: bgColor,
+          border: Border.all(color: neo.ink, width: 2),
+          boxShadow: [
+            BoxShadow(
+              color: neo.ink,
+              offset: const Offset(3, 3),
+              blurRadius: 0,
+            ),
+          ],
+        ),
+        child: Text(
+          label.toUpperCase(),
+          style: NeoTypography.mono.copyWith(
+            fontSize: 12,
+            fontWeight: FontWeight.bold,
+            color: NeoColors.ink,
+          ),
+        ),
+      ),
+    );
+  }
+
+  String _getIconString(IconData icon) {
+    if (icon == Icons.money) return 'money';
+    if (icon == Icons.account_balance) return 'account_balance';
+    if (icon == Icons.credit_card) return 'credit_card';
+    if (icon == Icons.savings) return 'savings';
+    if (icon == Icons.wallet) return 'wallet';
+    if (icon == Icons.payments) return 'payments';
+    if (icon == Icons.store) return 'store';
+    return 'account_balance_wallet';
+  }
+
   void _showEditWalletDialog(BuildContext context, wallet) {
     final neo = NeoTheme.of(context);
     final loc = AppLocalizations.of(context)!;
+    final provider = context.read<AppProvider>();
 
     final nameController = TextEditingController(text: wallet.name);
     final balanceController = TextEditingController(
         text: wallet.balance.toStringAsFixed(0));
+    String selectedType = wallet.type;
+    IconData selectedIcon = wallet.icon != null 
+        ? _getIconDataFromString(wallet.icon!) 
+        : wallet.defaultIcon;
+    Color selectedColor = wallet.color ?? NeoColors.tertiary;
+
+    final walletIcons = [
+      Icons.account_balance_wallet,
+      Icons.money,
+      Icons.account_balance,
+      Icons.credit_card,
+      Icons.savings,
+      Icons.wallet,
+      Icons.payments,
+      Icons.store,
+    ];
+
+    final walletColors = [
+      NeoColors.tertiary,
+      NeoColors.primary,
+      NeoColors.secondary,
+      Colors.orange,
+      Colors.purple,
+      Colors.teal,
+      Colors.pink,
+      Colors.blue,
+    ];
 
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
-        backgroundColor: neo.surface,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(0),
-          side: BorderSide(color: neo.ink, width: 3),
-        ),
-        title: Text(
-          loc.editWallet,
-          style: NeoTypography.textTheme.headlineSmall,
-        ),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            TextField(
-              controller: nameController,
-              decoration: InputDecoration(
-                labelText: loc.walletName,
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(0),
-                  borderSide: BorderSide(color: neo.ink, width: 2),
+      builder: (context) => StatefulBuilder(
+        builder: (context, setDialogState) {
+          return Dialog(
+            backgroundColor: neo.background,
+            child: Stack(
+              clipBehavior: Clip.none,
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(24),
+                  decoration: BoxDecoration(
+                    color: neo.surface,
+                    border: Border.all(color: neo.ink, width: 3),
+                    boxShadow: [
+                      BoxShadow(
+                        color: neo.ink,
+                        offset: const Offset(6, 6),
+                        blurRadius: 0,
+                        spreadRadius: 0,
+                      ),
+                    ],
+                  ),
+                  child: SingleChildScrollView(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // Header with badge
+                        Row(
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 12,
+                                vertical: 6,
+                              ),
+                              decoration: BoxDecoration(
+                                color: NeoColors.secondary,
+                                border: Border.all(color: neo.ink, width: 2),
+                              ),
+                              child: Text(
+                                loc.editWallet.toUpperCase(),
+                                style: NeoTypography.mono.copyWith(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.bold,
+                                  color: NeoColors.ink,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 24),
+                        // Wallet Name
+                        Text(
+                          loc.walletName,
+                          style: NeoTypography.mono.copyWith(
+                            fontSize: 12,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        TextField(
+                          controller: nameController,
+                          decoration: InputDecoration(
+                            hintText: loc.walletName,
+                            filled: true,
+                            fillColor: neo.background,
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(0),
+                              borderSide: BorderSide(color: neo.ink, width: 2),
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(0),
+                              borderSide: BorderSide(color: neo.ink, width: 2),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(0),
+                              borderSide:
+                                  BorderSide(color: NeoColors.secondary, width: 2),
+                            ),
+                            contentPadding: const EdgeInsets.symmetric(
+                              horizontal: 12,
+                              vertical: 12,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 20),
+                        // Balance
+                        Text(
+                          loc.balance,
+                          style: NeoTypography.mono.copyWith(
+                            fontSize: 12,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        TextField(
+                          controller: balanceController,
+                          keyboardType: TextInputType.number,
+                          decoration: InputDecoration(
+                            prefixText: '${provider.currencySymbol} ',
+                            filled: true,
+                            fillColor: neo.background,
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(0),
+                              borderSide: BorderSide(color: neo.ink, width: 2),
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(0),
+                              borderSide: BorderSide(color: neo.ink, width: 2),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(0),
+                              borderSide:
+                                  BorderSide(color: NeoColors.secondary, width: 2),
+                            ),
+                            contentPadding: const EdgeInsets.symmetric(
+                              horizontal: 12,
+                              vertical: 12,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 20),
+                        // Wallet Type
+                        Text(
+                          loc.type,
+                          style: NeoTypography.mono.copyWith(
+                            fontSize: 12,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        Container(
+                          decoration: BoxDecoration(
+                            border: Border.all(color: neo.ink, width: 2),
+                          ),
+                          child: Column(
+                            children: [
+                              _buildTypeOptionForEdit(
+                                context,
+                                'cash',
+                                loc.cash,
+                                Icons.money,
+                                selectedType,
+                                setDialogState,
+                                (value) => selectedType = value!,
+                                neo,
+                              ),
+                              _buildTypeOptionForEdit(
+                                context,
+                                'bank',
+                                loc.bank,
+                                Icons.account_balance,
+                                selectedType,
+                                setDialogState,
+                                (value) => selectedType = value!,
+                                neo,
+                              ),
+                              _buildTypeOptionForEdit(
+                                context,
+                                'credit',
+                                loc.credit,
+                                Icons.credit_card,
+                                selectedType,
+                                setDialogState,
+                                (value) => selectedType = value!,
+                                neo,
+                              ),
+                              _buildTypeOptionForEdit(
+                                context,
+                                'savings',
+                                loc.savings,
+                                Icons.savings,
+                                selectedType,
+                                setDialogState,
+                                (value) => selectedType = value!,
+                                neo,
+                              ),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(height: 20),
+                        // Icon Selection
+                        Text(
+                          'ICON',
+                          style: NeoTypography.mono.copyWith(
+                            fontSize: 12,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const SizedBox(height: 12),
+                        Wrap(
+                          spacing: 8,
+                          runSpacing: 8,
+                          children: walletIcons.map((icon) {
+                            final isSelected = selectedIcon == icon;
+                            return GestureDetector(
+                              onTap: () {
+                                setDialogState(() {
+                                  selectedIcon = icon;
+                                });
+                              },
+                              child: Container(
+                                width: 48,
+                                height: 48,
+                                decoration: BoxDecoration(
+                                  color: isSelected
+                                      ? NeoColors.secondary
+                                      : neo.background,
+                                  border: Border.all(
+                                    color: neo.ink,
+                                    width: isSelected ? 3 : 2,
+                                  ),
+                                  boxShadow: isSelected
+                                      ? [
+                                          BoxShadow(
+                                            color: neo.ink,
+                                            offset: const Offset(2, 2),
+                                            blurRadius: 0,
+                                          ),
+                                        ]
+                                      : null,
+                                ),
+                                child: Icon(
+                                  icon,
+                                  color: isSelected
+                                      ? NeoColors.ink
+                                      : neo.textMain,
+                                  size: 24,
+                                ),
+                              ),
+                            );
+                          }).toList(),
+                        ),
+                        const SizedBox(height: 20),
+                        // Color Selection
+                        Text(
+                          'MÀU SẮC',
+                          style: NeoTypography.mono.copyWith(
+                            fontSize: 12,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const SizedBox(height: 12),
+                        Wrap(
+                          spacing: 12,
+                          runSpacing: 12,
+                          children: walletColors.map((color) {
+                            final isSelected = selectedColor == color;
+                            return GestureDetector(
+                              onTap: () {
+                                setDialogState(() {
+                                  selectedColor = color;
+                                });
+                              },
+                              child: Container(
+                                width: 44,
+                                height: 44,
+                                decoration: BoxDecoration(
+                                  color: color,
+                                  border: Border.all(
+                                    color: neo.ink,
+                                    width: isSelected ? 3 : 2,
+                                  ),
+                                  boxShadow: isSelected
+                                      ? [
+                                          BoxShadow(
+                                            color: neo.ink,
+                                            offset: const Offset(2, 2),
+                                            blurRadius: 0,
+                                          ),
+                                        ]
+                                      : null,
+                                ),
+                                child: isSelected
+                                    ? Icon(Icons.check,
+                                        color: NeoColors.ink, size: 24)
+                                    : null,
+                              ),
+                            );
+                          }).toList(),
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
+                // Action Buttons
+                Positioned(
+                  right: 24,
+                  bottom: -16,
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      _buildNeoButtonForEdit(
+                        context,
+                        loc.cancel,
+                        NeoColors.secondary,
+                        () => Navigator.pop(context),
+                        neo,
+                      ),
+                      const SizedBox(width: 12),
+                      _buildNeoButtonForEdit(
+                        context,
+                        loc.save,
+                        NeoColors.secondary,
+                        () async {
+                          if (nameController.text.isEmpty) return;
+                          final balance =
+                              double.tryParse(balanceController.text) ?? wallet.balance;
+                          final updatedWallet = wallet.copyWith(
+                            name: nameController.text,
+                            balance: balance,
+                            type: selectedType,
+                            icon: _getIconString(selectedIcon),
+                            color: selectedColor,
+                          );
+                          await context.read<AppProvider>().updateWallet(updatedWallet);
+                          if (context.mounted) Navigator.pop(context);
+                        },
+                        neo,
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          );
+        },
+      ),
+    );
+  }
+
+  Widget _buildTypeOptionForEdit(
+    BuildContext context,
+    String value,
+    String label,
+    IconData icon,
+    String selectedType,
+    Function setDialogState,
+    Function(String?) onChanged,
+    NeoThemeData neo,
+  ) {
+    final isSelected = selectedType == value;
+    return InkWell(
+      onTap: () {
+        setDialogState(() {
+          onChanged(value);
+        });
+      },
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        decoration: BoxDecoration(
+          color: isSelected ? NeoColors.secondary : null,
+          border: Border(
+            bottom: BorderSide(color: neo.ink, width: 1),
+          ),
+        ),
+        child: Row(
+          children: [
+            Icon(
+              icon,
+              size: 20,
+              color: isSelected ? NeoColors.ink : neo.textMain,
+            ),
+            const SizedBox(width: 12),
+            Text(
+              label,
+              style: NeoTypography.mono.copyWith(
+                fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                color: isSelected ? NeoColors.ink : neo.textMain,
               ),
             ),
-            const SizedBox(height: 16),
-            TextField(
-              controller: balanceController,
-              keyboardType: TextInputType.number,
-              decoration: InputDecoration(
-                labelText: loc.balance,
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(0),
-                  borderSide: BorderSide(color: neo.ink, width: 2),
-                ),
-              ),
+            const Spacer(),
+            if (isSelected)
+              Icon(Icons.check, color: NeoColors.ink, size: 20),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildNeoButtonForEdit(
+    BuildContext context,
+    String label,
+    Color bgColor,
+    VoidCallback onPressed,
+    NeoThemeData neo,
+  ) {
+    return GestureDetector(
+      onTap: onPressed,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
+        decoration: BoxDecoration(
+          color: bgColor,
+          border: Border.all(color: neo.ink, width: 2),
+          boxShadow: [
+            BoxShadow(
+              color: neo.ink,
+              offset: const Offset(3, 3),
+              blurRadius: 0,
             ),
           ],
         ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: Text(loc.cancel),
+        child: Text(
+          label.toUpperCase(),
+          style: NeoTypography.mono.copyWith(
+            fontSize: 12,
+            fontWeight: FontWeight.bold,
+            color: NeoColors.ink,
           ),
-          ElevatedButton(
-            onPressed: () async {
-              if (nameController.text.isEmpty) return;
-              final balance =
-                  double.tryParse(balanceController.text) ?? wallet.balance;
-              final updatedWallet = wallet.copyWith(
-                name: nameController.text,
-                balance: balance,
-              );
-              await context.read<AppProvider>().updateWallet(updatedWallet);
-              if (context.mounted) Navigator.pop(context);
-            },
-            child: Text(loc.save),
-          ),
-        ],
+        ),
       ),
     );
+  }
+
+  IconData _getIconDataFromString(String iconString) {
+    switch (iconString.toLowerCase()) {
+      case 'money':
+        return Icons.money;
+      case 'account_balance':
+        return Icons.account_balance;
+      case 'credit_card':
+        return Icons.credit_card;
+      case 'savings':
+        return Icons.savings;
+      case 'wallet':
+        return Icons.wallet;
+      case 'payments':
+        return Icons.payments;
+      case 'store':
+        return Icons.store;
+      default:
+        return Icons.account_balance_wallet;
+    }
   }
 
   void _showTransferDialog(BuildContext context) {

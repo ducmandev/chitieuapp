@@ -12,6 +12,8 @@ import '../providers/app_provider.dart';
 import '../utils/category_utils.dart';
 import 'package:chitieuapp/l10n/app_localizations.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:geocoding/geocoding.dart';
 import 'dart:io';
 
 class EditTransactionScreen extends StatefulWidget {
@@ -36,6 +38,11 @@ class _EditTransactionScreenState extends State<EditTransactionScreen> {
   late bool _isIncome;
   WalletModel? _selectedWallet;
   String? _receiptImagePath;
+  String? _locationName;
+  String? _locationAddress;
+  double? _latitude;
+  double? _longitude;
+  bool _isLoadingLocation = false;
 
   @override
   void initState() {
@@ -59,6 +66,12 @@ class _EditTransactionScreenState extends State<EditTransactionScreen> {
             isDefault: true,
           ),
         );
+    // Load existing location data
+    _receiptImagePath = widget.transaction.receiptPath;
+    _locationName = widget.transaction.locationName;
+    _locationAddress = widget.transaction.locationAddress;
+    _latitude = widget.transaction.latitude;
+    _longitude = widget.transaction.longitude;
   }
 
   @override
@@ -149,6 +162,10 @@ class _EditTransactionScreenState extends State<EditTransactionScreen> {
 
               // Receipt
               _buildReceiptSection(context, neo, loc),
+              const SizedBox(height: 16),
+
+              // Location
+              _buildLocationSection(context, neo, loc),
               const SizedBox(height: 24),
 
               // Save button
@@ -565,6 +582,271 @@ class _EditTransactionScreenState extends State<EditTransactionScreen> {
     );
   }
 
+  Widget _buildLocationSection(
+    BuildContext context,
+    NeoThemeData neo,
+    AppLocalizations loc,
+  ) {
+    return NeoCard(
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                loc.location,
+                style: NeoTypography.mono.copyWith(
+                  fontSize: 12,
+                  fontWeight: FontWeight.bold,
+                  color: neo.textSub,
+                ),
+              ),
+              if (_locationName != null)
+                Row(
+                  children: [
+                    TextButton(
+                      onPressed: () => _showRemoveLocationDialog(context),
+                      child: Text(loc.removeLocation),
+                    ),
+                  ],
+                ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          if (_locationName != null) ...[
+            Row(
+              children: [
+                Icon(Icons.location_on, color: NeoColors.primary, size: 20),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        _locationName!,
+                        style: NeoTypography.mono.copyWith(
+                          fontWeight: FontWeight.bold,
+                          color: neo.textMain,
+                        ),
+                      ),
+                      if (_locationAddress != null)
+                        Text(
+                          _locationAddress!,
+                          style: NeoTypography.mono.copyWith(
+                            fontSize: 12,
+                            color: neo.textSub,
+                          ),
+                        ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ] else
+            GestureDetector(
+              onTap: () => _getCurrentLocation(context),
+              child: Container(
+                height: 120,
+                decoration: BoxDecoration(
+                  color: neo.background,
+                  border: Border.all(color: neo.ink.withValues(alpha: 0.3), width: 2),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    if (_isLoadingLocation)
+                      CircularProgressIndicator(color: neo.primary)
+                    else ...[
+                      Icon(Icons.my_location, size: 32, color: neo.textSub),
+                      const SizedBox(height: 8),
+                      Text(
+                        loc.addLocation,
+                        style: NeoTypography.mono.copyWith(color: neo.textSub),
+                      ),
+                    ],
+                  ],
+                ),
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+
+  Future<void> _getCurrentLocation(BuildContext context) async {
+    setState(() {
+      _isLoadingLocation = true;
+    });
+
+    try {
+      // Check location permission
+      LocationPermission permission = await Geolocator.checkPermission();
+      if (permission == LocationPermission.denied) {
+        permission = await Geolocator.requestPermission();
+        if (permission == LocationPermission.denied) {
+          _showLocationPermissionDenied(context);
+          setState(() {
+            _isLoadingLocation = false;
+          });
+          return;
+        }
+      }
+
+      if (permission == LocationPermission.deniedForever) {
+        _showLocationPermissionDeniedForever(context);
+        setState(() {
+          _isLoadingLocation = false;
+        });
+        return;
+      }
+
+      // Get current position
+      Position position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high,
+      );
+
+      // Reverse geocoding to get address
+      List<Placemark> placemarks = await placemarkFromCoordinates(
+        position.latitude,
+        position.longitude,
+      );
+
+      if (placemarks.isNotEmpty) {
+        Placemark place = placemarks.first;
+        setState(() {
+          _latitude = position.latitude;
+          _longitude = position.longitude;
+          _locationName = place.name ?? place.locality ?? 'Unknown';
+          _locationAddress = '${place.street}, ${place.locality}, ${place.country}';
+        });
+      } else {
+        setState(() {
+          _latitude = position.latitude;
+          _longitude = position.longitude;
+          _locationName = 'GPS: ${position.latitude.toStringAsFixed(6)}, ${position.longitude.toStringAsFixed(6)}';
+          _locationAddress = null;
+        });
+      }
+    } catch (e) {
+      _showLocationError(context, e.toString());
+    } finally {
+      setState(() {
+        _isLoadingLocation = false;
+      });
+    }
+  }
+
+  void _showRemoveLocationDialog(BuildContext context) {
+    final neo = NeoTheme.of(context);
+    final loc = AppLocalizations.of(context)!;
+
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        backgroundColor: neo.surface,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(0),
+          side: BorderSide(color: neo.ink, width: 3),
+        ),
+        title: Text(loc.removeLocation),
+        content: Text('Remove location data?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text(loc.cancel),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              setState(() {
+                _locationName = null;
+                _locationAddress = null;
+                _latitude = null;
+                _longitude = null;
+              });
+              Navigator.pop(context);
+            },
+            child: Text(loc.remove),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showLocationPermissionDenied(BuildContext context) {
+    final neo = NeoTheme.of(context);
+    final loc = AppLocalizations.of(context)!;
+
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        backgroundColor: neo.surface,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(0),
+          side: BorderSide(color: neo.ink, width: 3),
+        ),
+        title: Text(loc.permissionDenied),
+        content: Text('Location permission is required to add location.'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text(loc.ok),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showLocationPermissionDeniedForever(BuildContext context) {
+    final neo = NeoTheme.of(context);
+    final loc = AppLocalizations.of(context)!;
+
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        backgroundColor: neo.surface,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(0),
+          side: BorderSide(color: neo.ink, width: 3),
+        ),
+        title: Text(loc.permissionDenied),
+        content: Text('Location permission is permanently denied. Please enable it in settings.'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text(loc.ok),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showLocationError(BuildContext context, String error) {
+    final neo = NeoTheme.of(context);
+    final loc = AppLocalizations.of(context)!;
+
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        backgroundColor: neo.surface,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(0),
+          side: BorderSide(color: neo.ink, width: 3),
+        ),
+        title: Text(loc.error),
+        content: Text('Failed to get location: $error'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text(loc.ok),
+          ),
+        ],
+      ),
+    );
+  }
+
   Future<void> _pickReceiptImage(BuildContext context) async {
     final picker = ImagePicker();
     final pickedFile = await picker.pickImage(source: ImageSource.gallery);
@@ -621,6 +903,11 @@ class _EditTransactionScreenState extends State<EditTransactionScreen> {
       walletId: _selectedWallet?.id,
       note: _noteController.text.isEmpty ? null : _noteController.text,
       tags: _tagsController.text.isEmpty ? null : _tagsController.text,
+      receiptPath: _receiptImagePath,
+      locationName: _locationName,
+      locationAddress: _locationAddress,
+      latitude: _latitude,
+      longitude: _longitude,
     );
 
     await context.read<AppProvider>().updateTransaction(updatedTransaction);
