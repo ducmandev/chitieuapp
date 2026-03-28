@@ -44,7 +44,7 @@ class DatabaseHelper {
 
     return await openDatabase(
       path,
-      version: 2,
+      version: 3,
       onCreate: _createDB,
       onUpgrade: _onUpgrade,
     );
@@ -71,7 +71,12 @@ CREATE TABLE transactions (
   wallet_id $intNullable,
   note $textNullable,
   tags $textNullable,
-  template_id $textNullable
+  template_id $textNullable,
+  receipt_path $textNullable,
+  location_name $textNullable,
+  location_address $textNullable,
+  latitude $realNullable,
+  longitude $realNullable
 )
 ''');
 
@@ -219,6 +224,15 @@ CREATE TABLE IF NOT EXISTS transaction_templates (
   usage_count INTEGER NOT NULL
 )
 ''');
+    }
+    
+    // Add receipt and location columns for version 3
+    if (oldVersion < 3) {
+      await db.execute('ALTER TABLE transactions ADD COLUMN receipt_path TEXT');
+      await db.execute('ALTER TABLE transactions ADD COLUMN location_name TEXT');
+      await db.execute('ALTER TABLE transactions ADD COLUMN location_address TEXT');
+      await db.execute('ALTER TABLE transactions ADD COLUMN latitude REAL');
+      await db.execute('ALTER TABLE transactions ADD COLUMN longitude REAL');
     }
   }
 

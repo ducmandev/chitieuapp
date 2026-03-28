@@ -9,6 +9,11 @@ class TransactionModel {
   String? note;
   String? tags; // Comma-separated tags
   String? templateId;
+  String? receiptPath; // Path to receipt/payment image
+  String? locationName; // Location name
+  String? locationAddress; // Full address
+  double? latitude; // GPS latitude
+  double? longitude; // GPS longitude
 
   TransactionModel({
     this.id,
@@ -21,6 +26,11 @@ class TransactionModel {
     this.note,
     this.tags,
     this.templateId,
+    this.receiptPath,
+    this.locationName,
+    this.locationAddress,
+    this.latitude,
+    this.longitude,
   });
 
   Map<String, dynamic> toMap() {
@@ -35,6 +45,11 @@ class TransactionModel {
       'note': note,
       'tags': tags,
       'template_id': templateId,
+      'receipt_path': receiptPath,
+      'location_name': locationName,
+      'location_address': locationAddress,
+      'latitude': latitude,
+      'longitude': longitude,
     };
   }
 
@@ -50,6 +65,11 @@ class TransactionModel {
       note: map['note'],
       tags: map['tags'],
       templateId: map['template_id'],
+      receiptPath: map['receipt_path'],
+      locationName: map['location_name'],
+      locationAddress: map['location_address'],
+      latitude: map['latitude']?.toDouble(),
+      longitude: map['longitude']?.toDouble(),
     );
   }
 
@@ -69,6 +89,11 @@ class TransactionModel {
     String? note,
     String? tags,
     String? templateId,
+    String? receiptPath,
+    String? locationName,
+    String? locationAddress,
+    double? latitude,
+    double? longitude,
   }) {
     return TransactionModel(
       id: id ?? this.id,
@@ -81,6 +106,11 @@ class TransactionModel {
       note: note ?? this.note,
       tags: tags ?? this.tags,
       templateId: templateId ?? this.templateId,
+      receiptPath: receiptPath ?? this.receiptPath,
+      locationName: locationName ?? this.locationName,
+      locationAddress: locationAddress ?? this.locationAddress,
+      latitude: latitude ?? this.latitude,
+      longitude: longitude ?? this.longitude,
     );
   }
 }
