@@ -9,6 +9,10 @@ import '../widgets/neo_button.dart';
 import '../providers/app_provider.dart';
 import '../models/transaction.dart';
 import 'package:chitieuapp/l10n/app_localizations.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:geocoding/geocoding.dart';
+import 'dart:io';
 
 class QuickAddScreen extends StatefulWidget {
   const QuickAddScreen({super.key});
@@ -22,6 +26,12 @@ class _QuickAddScreenState extends State<QuickAddScreen> {
   String? _selectedCategory;
   bool _isIncome = false;
   Timer? _backspaceHoldTimer;
+  String? _receiptImagePath;
+  String? _locationName;
+  String? _locationAddress;
+  double? _latitude;
+  double? _longitude;
+  bool _isLoadingLocation = false;
 
   @override
   void dispose() {
@@ -91,6 +101,11 @@ class _QuickAddScreenState extends State<QuickAddScreen> {
       date: DateTime.now(),
       category: cat,
       type: _isIncome ? 'income' : 'expense',
+      receiptPath: _receiptImagePath,
+      locationName: _locationName,
+      locationAddress: _locationAddress,
+      latitude: _latitude,
+      longitude: _longitude,
     );
 
     await context.read<AppProvider>().addTransaction(tx);
@@ -158,6 +173,7 @@ class _QuickAddScreenState extends State<QuickAddScreen> {
                   _buildTopbar(context, neo),
                   _buildDisplayArea(context),
                   _buildCategorySlider(context, neo),
+                  _buildQuickOptions(context, neo),
                   _buildNumpadArea(context, neo),
                 ],
               ),
@@ -355,6 +371,323 @@ class _QuickAddScreenState extends State<QuickAddScreen> {
               height: 1,
               color: neo.textMain,
             ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildQuickOptions(BuildContext context, NeoThemeData neo) {
+    final loc = AppLocalizations.of(context)!;
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          // Receipt button
+          GestureDetector(
+            onTap: () => _pickReceiptImage(context),
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              decoration: BoxDecoration(
+                color: _receiptImagePath != null ? neo.primary : neo.surface,
+                border: Border.all(color: neo.ink, width: 2),
+                borderRadius: BorderRadius.circular(24),
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(
+                    _receiptImagePath != null 
+                      ? Icons.check_circle 
+                      : Icons.add_photo_alternate,
+                    color: neo.textMain,
+                    size: 20,
+                  ),
+                  const SizedBox(width: 8),
+                  Text(
+                    _receiptImagePath != null 
+                      ? '${loc.receipt} ✓' 
+                      : loc.addReceipt,
+                    style: NeoTypography.mono.copyWith(
+                      fontSize: 12,
+                      color: neo.textMain,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          // Location button
+          GestureDetector(
+            onTap: () => _getCurrentLocation(context),
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              decoration: BoxDecoration(
+                color: _locationName != null ? neo.success : neo.surface,
+                border: Border.all(color: neo.ink, width: 2),
+                borderRadius: BorderRadius.circular(24),
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  if (_isLoadingLocation)
+                    SizedBox(
+                      width: 20,
+                      height: 20,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2,
+                        color: neo.textMain,
+                      ),
+                    )
+                  else
+                    Icon(
+                      _locationName != null 
+                        ? Icons.location_on 
+                        : Icons.my_location,
+                      color: neo.textMain,
+                      size: 20,
+                    ),
+                  const SizedBox(width: 8),
+                  Text(
+                    _locationName != null 
+                      ? '${loc.location} ✓' 
+                      : loc.addLocation,
+                    style: NeoTypography.mono.copyWith(
+                      fontSize: 12,
+                      color: neo.textMain,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Future<void> _pickReceiptImage(BuildContext context) async {
+    final picker = ImagePicker();
+    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+    if (pickedFile != null) {
+      setState(() {
+        _receiptImagePath = pickedFile.path;
+      });
+      _showReceiptPreview(context);
+    }
+  }
+
+  void _showReceiptPreview(BuildContext context) {
+    final neo = NeoTheme.of(context);
+    final loc = AppLocalizations.of(context)!;
+
+    showDialog(
+      context: context,
+      builder: (context) => Dialog(
+        backgroundColor: neo.surface,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(0),
+          side: BorderSide(color: neo.ink, width: 3),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                border: Border(
+                  bottom: BorderSide(color: neo.ink, width: 3),
+                ),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    loc.receipt,
+                    style: NeoTypography.mono.copyWith(
+                      fontWeight: FontWeight.bold,
+                      color: neo.textMain,
+                    ),
+                  ),
+                  IconButton(
+                    onPressed: () => Navigator.pop(context),
+                    icon: Icon(Icons.close, color: neo.textMain),
+                  ),
+                ],
+              ),
+            ),
+            if (_receiptImagePath != null)
+              Image.file(
+                File(_receiptImagePath!),
+                height: 300,
+                width: double.infinity,
+                fit: BoxFit.contain,
+              ),
+            Padding(
+              padding: const EdgeInsets.all(16),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  NeoButton(
+                    backgroundColor: neo.error,
+                    onPressed: () {
+                      setState(() {
+                        _receiptImagePath = null;
+                      });
+                      Navigator.pop(context);
+                    },
+                    child: Text(
+                      loc.remove,
+                      style: NeoTypography.mono.copyWith(color: Colors.white),
+                    ),
+                  ),
+                  NeoButton(
+                    backgroundColor: neo.primary,
+                    onPressed: () => Navigator.pop(context),
+                    child: Text(
+                      loc.ok,
+                      style: NeoTypography.mono.copyWith(color: Colors.white),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Future<void> _getCurrentLocation(BuildContext context) async {
+    setState(() {
+      _isLoadingLocation = true;
+    });
+
+    try {
+      // Check location permission
+      LocationPermission permission = await Geolocator.checkPermission();
+      if (permission == LocationPermission.denied) {
+        permission = await Geolocator.requestPermission();
+        if (permission == LocationPermission.denied) {
+          _showLocationPermissionDenied(context);
+          setState(() {
+            _isLoadingLocation = false;
+          });
+          return;
+        }
+      }
+
+      if (permission == LocationPermission.deniedForever) {
+        _showLocationPermissionDeniedForever(context);
+        setState(() {
+          _isLoadingLocation = false;
+        });
+        return;
+      }
+
+      // Get current position
+      Position position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high,
+      );
+
+      // Reverse geocoding to get address
+      List<Placemark> placemarks = await placemarkFromCoordinates(
+        position.latitude,
+        position.longitude,
+      );
+
+      if (placemarks.isNotEmpty) {
+        Placemark place = placemarks.first;
+        setState(() {
+          _latitude = position.latitude;
+          _longitude = position.longitude;
+          _locationName = place.name ?? place.locality ?? 'Unknown';
+          _locationAddress = '${place.street}, ${place.locality}, ${place.country}';
+        });
+      } else {
+        setState(() {
+          _latitude = position.latitude;
+          _longitude = position.longitude;
+          _locationName = 'GPS: ${position.latitude.toStringAsFixed(6)}, ${position.longitude.toStringAsFixed(6)}';
+          _locationAddress = null;
+        });
+      }
+    } catch (e) {
+      _showLocationError(context, e.toString());
+    } finally {
+      setState(() {
+        _isLoadingLocation = false;
+      });
+    }
+  }
+
+  void _showLocationPermissionDenied(BuildContext context) {
+    final neo = NeoTheme.of(context);
+    final loc = AppLocalizations.of(context)!;
+
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        backgroundColor: neo.surface,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(0),
+          side: BorderSide(color: neo.ink, width: 3),
+        ),
+        title: Text(loc.permissionDenied),
+        content: Text('Location permission is required to add location.'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text(loc.ok),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showLocationPermissionDeniedForever(BuildContext context) {
+    final neo = NeoTheme.of(context);
+    final loc = AppLocalizations.of(context)!;
+
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        backgroundColor: neo.surface,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(0),
+          side: BorderSide(color: neo.ink, width: 3),
+        ),
+        title: Text(loc.permissionDenied),
+        content: Text('Location permission is permanently denied. Please enable it in settings.'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text(loc.ok),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showLocationError(BuildContext context, String error) {
+    final neo = NeoTheme.of(context);
+    final loc = AppLocalizations.of(context)!;
+
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        backgroundColor: neo.surface,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(0),
+          side: BorderSide(color: neo.ink, width: 3),
+        ),
+        title: Text(loc.error),
+        content: Text('Failed to get location: $error'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text(loc.ok),
           ),
         ],
       ),
