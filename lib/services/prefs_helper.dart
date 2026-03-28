@@ -196,4 +196,16 @@ class PrefsHelper {
     final prefs = await SharedPreferences.getInstance();
     return prefs.getString('join_date');
   }
+
+  // ─── Onboarding ─────────────────────────────────────────────────────────────
+
+  static Future<void> saveOnboardingCompleted() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('onboarding_completed', true);
+  }
+
+  static Future<bool> getOnboardingCompleted() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getBool('onboarding_completed') ?? false;
+  }
 }

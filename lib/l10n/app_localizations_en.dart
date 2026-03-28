@@ -213,6 +213,21 @@ class AppLocalizationsEn extends AppLocalizations {
   String get navSettings => 'SETTINGS';
 
   @override
+  String get navBudgets => 'BUDGETS';
+
+  @override
+  String get navGoals => 'GOALS';
+
+  @override
+  String get navWallets => 'WALLETS';
+
+  @override
+  String get navTemplates => 'TEMPLATES';
+
+  @override
+  String get navStatistics => 'STATISTICS';
+
+  @override
   String get systemPrefs => 'SYSTEM PREFS';
 
   @override
@@ -367,4 +382,484 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get useBiometric => 'USE BIOMETRICS';
+
+  @override
+  String get edit => 'EDIT';
+
+  @override
+  String get save => 'SAVE';
+
+  @override
+  String get cancel => 'CANCEL';
+
+  @override
+  String get delete => 'DELETE';
+
+  @override
+  String get add => 'ADD';
+
+  @override
+  String get create => 'CREATE';
+
+  @override
+  String get update => 'UPDATE';
+
+  @override
+  String get confirm => 'CONFIRM';
+
+  @override
+  String get done => 'DONE';
+
+  @override
+  String get budgets => 'BUDGETS';
+
+  @override
+  String get budgetLimit => 'BUDGET LIMIT';
+
+  @override
+  String get setBudget => 'SET BUDGET';
+
+  @override
+  String get period => 'PERIOD';
+
+  @override
+  String get monthly => 'Monthly';
+
+  @override
+  String get weekly => 'Weekly';
+
+  @override
+  String get remaining => 'REMAINING';
+
+  @override
+  String get overBudget => 'OVER BUDGET';
+
+  @override
+  String get setCategoryBudget => 'Set spending limit for';
+
+  @override
+  String get noBudgets => 'No budgets set';
+
+  @override
+  String get addBudget => 'ADD BUDGET';
+
+  @override
+  String get editBudget => 'EDIT BUDGET';
+
+  @override
+  String get deleteBudget => 'DELETE BUDGET';
+
+  @override
+  String get budgetWarning => 'Budget Warning';
+
+  @override
+  String get budgetWarningMsg => 'You\'ve used 80% of your budget for';
+
+  @override
+  String get goals => 'GOALS';
+
+  @override
+  String get goalName => 'GOAL NAME';
+
+  @override
+  String get targetAmount => 'TARGET AMOUNT';
+
+  @override
+  String get saved => 'SAVED';
+
+  @override
+  String get progress => 'PROGRESS';
+
+  @override
+  String get deadline => 'DEADLINE';
+
+  @override
+  String get addGoal => 'ADD GOAL';
+
+  @override
+  String get noGoals => 'No goals set';
+
+  @override
+  String get goalCompleted => 'GOAL COMPLETED!';
+
+  @override
+  String get congratsGoal => 'Congratulations! You\'ve reached your goal';
+
+  @override
+  String get addToSavings => 'ADD TO SAVINGS';
+
+  @override
+  String get daysLeft => 'days left';
+
+  @override
+  String get deleteGoal => 'DELETE GOAL';
+
+  @override
+  String get recurring => 'RECURRING';
+
+  @override
+  String get frequency => 'FREQUENCY';
+
+  @override
+  String get daily => 'Daily';
+
+  @override
+  String get yearly => 'Yearly';
+
+  @override
+  String get nextDue => 'NEXT DUE';
+
+  @override
+  String get isActive => 'ACTIVE';
+
+  @override
+  String get endDate => 'END DATE';
+
+  @override
+  String get addRecurring => 'ADD RECURRING';
+
+  @override
+  String get noRecurring => 'No recurring transactions';
+
+  @override
+  String get editRecurring => 'EDIT RECURRING';
+
+  @override
+  String get deleteRecurring => 'DELETE RECURRING';
+
+  @override
+  String get recurringProcessed => 'Recurring transaction processed';
+
+  @override
+  String get wallets => 'WALLETS';
+
+  @override
+  String get walletName => 'WALLET NAME';
+
+  @override
+  String get balance => 'BALANCE';
+
+  @override
+  String get type => 'TYPE';
+
+  @override
+  String get cash => 'Cash';
+
+  @override
+  String get bank => 'Bank';
+
+  @override
+  String get credit => 'Credit Card';
+
+  @override
+  String get savings => 'Savings';
+
+  @override
+  String get defaultWallet => 'DEFAULT';
+
+  @override
+  String get addWallet => 'ADD WALLET';
+
+  @override
+  String get noWallets => 'No wallets found';
+
+  @override
+  String get editWallet => 'EDIT WALLET';
+
+  @override
+  String get deleteWallet => 'DELETE WALLET';
+
+  @override
+  String get transfer => 'TRANSFER';
+
+  @override
+  String get transferBetween => 'Transfer between wallets';
+
+  @override
+  String get from => 'FROM';
+
+  @override
+  String get to => 'TO';
+
+  @override
+  String get amount => 'AMOUNT';
+
+  @override
+  String get setDefault => 'SET AS DEFAULT';
+
+  @override
+  String get templates => 'TEMPLATES';
+
+  @override
+  String get templateName => 'TEMPLATE NAME';
+
+  @override
+  String get useTemplate => 'USE TEMPLATE';
+
+  @override
+  String get saveAsTemplate => 'SAVE AS TEMPLATE';
+
+  @override
+  String get noTemplates => 'No templates yet';
+
+  @override
+  String get templateSaved => 'Template saved';
+
+  @override
+  String get deleteTemplate => 'DELETE TEMPLATE';
+
+  @override
+  String get search => 'SEARCH';
+
+  @override
+  String get filter => 'FILTER';
+
+  @override
+  String get dateRange => 'DATE RANGE';
+
+  @override
+  String get sortBy => 'SORT BY';
+
+  @override
+  String get results => 'RESULTS';
+
+  @override
+  String get noResults => 'No results found';
+
+  @override
+  String get searchPlaceholder => 'Search transactions...';
+
+  @override
+  String get allTime => 'All Time';
+
+  @override
+  String get last7Days => 'Last 7 Days';
+
+  @override
+  String get last30Days => 'Last 30 Days';
+
+  @override
+  String get last90Days => 'Last 90 Days';
+
+  @override
+  String get thisYear => 'This Year';
+
+  @override
+  String get custom => 'Custom';
+
+  @override
+  String get newestFirst => 'Newest First';
+
+  @override
+  String get oldestFirst => 'Oldest First';
+
+  @override
+  String get highestAmount => 'Highest Amount';
+
+  @override
+  String get lowestAmount => 'Lowest Amount';
+
+  @override
+  String get byCategory => 'By Category';
+
+  @override
+  String get reports => 'REPORTS';
+
+  @override
+  String get exportPDF => 'EXPORT PDF';
+
+  @override
+  String get generateReport => 'GENERATE REPORT';
+
+  @override
+  String get monthlyReport => 'MONTHLY REPORT';
+
+  @override
+  String get yearlyReport => 'YEARLY REPORT';
+
+  @override
+  String get reportSummary => 'SUMMARY';
+
+  @override
+  String get reportIncome => 'TOTAL INCOME';
+
+  @override
+  String get reportExpense => 'TOTAL EXPENSE';
+
+  @override
+  String get reportNet => 'NET SAVINGS';
+
+  @override
+  String get shareReport => 'SHARE REPORT';
+
+  @override
+  String get statistics => 'STATISTICS';
+
+  @override
+  String get spendingTrend => 'SPENDING TREND';
+
+  @override
+  String get incomeVsExpense => 'INCOME VS EXPENSE';
+
+  @override
+  String get topCategories => 'TOP CATEGORIES';
+
+  @override
+  String get last6Months => 'LAST 6 MONTHS';
+
+  @override
+  String get last12Months => 'LAST 12 MONTHS';
+
+  @override
+  String get averageSpending => 'AVERAGE SPENDING';
+
+  @override
+  String get monthOverMonth => 'MONTH OVER MONTH';
+
+  @override
+  String get onboarding => 'ONBOARDING';
+
+  @override
+  String get welcome => 'WELCOME';
+
+  @override
+  String get skip => 'SKIP';
+
+  @override
+  String get next => 'NEXT';
+
+  @override
+  String get finish => 'FINISH';
+
+  @override
+  String get getStarted => 'GET STARTED';
+
+  @override
+  String get onboardingTitle1 => 'Track Your Spending';
+
+  @override
+  String get onboardingDesc1 => 'Keep tabs on where your money goes with Neo.Cash';
+
+  @override
+  String get onboardingTitle2 => 'Set Budgets';
+
+  @override
+  String get onboardingDesc2 => 'Create budgets for each category to stay on track';
+
+  @override
+  String get onboardingTitle3 => 'Reach Your Goals';
+
+  @override
+  String get onboardingDesc3 => 'Set savings goals and watch your progress grow';
+
+  @override
+  String get categoryManagement => 'CATEGORIES';
+
+  @override
+  String get addCategory => 'ADD CATEGORY';
+
+  @override
+  String get editCategory => 'EDIT CATEGORY';
+
+  @override
+  String get deleteCategory => 'DELETE CATEGORY';
+
+  @override
+  String get categoryName => 'CATEGORY NAME';
+
+  @override
+  String get selectIcon => 'SELECT ICON';
+
+  @override
+  String get selectColor => 'SELECT COLOR';
+
+  @override
+  String get categoryType => 'TYPE';
+
+  @override
+  String get categoryWarning => 'This category has transactions. Are you sure?';
+
+  @override
+  String get note => 'NOTE';
+
+  @override
+  String get tags => 'TAGS';
+
+  @override
+  String get addTag => 'Add tag';
+
+  @override
+  String get noTags => 'No tags';
+
+  @override
+  String get attachReceipt => 'ATTACH RECEIPT';
+
+  @override
+  String get changeReceipt => 'CHANGE RECEIPT';
+
+  @override
+  String get removeReceipt => 'REMOVE RECEIPT';
+
+  @override
+  String get selectWallet => 'SELECT WALLET';
+
+  @override
+  String get allWallets => 'ALL WALLETS';
+
+  @override
+  String get encryption => 'ENCRYPTION';
+
+  @override
+  String get exportEncrypted => 'EXPORT ENCRYPTED BACKUP';
+
+  @override
+  String get importEncrypted => 'IMPORT ENCRYPTED BACKUP';
+
+  @override
+  String get backupPassword => 'BACKUP PASSWORD';
+
+  @override
+  String get enterPassword => 'ENTER PASSWORD';
+
+  @override
+  String get passwordsMatch => 'Passwords match';
+
+  @override
+  String get backupCreated => 'Backup created successfully';
+
+  @override
+  String get backupRestored => 'Backup restored successfully';
+
+  @override
+  String get backupFailed => 'Backup operation failed';
+
+  @override
+  String get selectStartDate => 'SELECT START DATE';
+
+  @override
+  String get selectEndDate => 'SELECT END DATE';
+
+  @override
+  String get apply => 'APPLY';
+
+  @override
+  String get reset => 'RESET';
+
+  @override
+  String get previous => 'PREVIOUS';
+
+  @override
+  String get category => 'CATEGORY';
+
+  @override
+  String get title => 'TITLE';
+
+  @override
+  String get date => 'DATE';
+
+  @override
+  String get remove => 'REMOVE';
+
+  @override
+  String get importCsv => 'IMPORT CSV';
 }

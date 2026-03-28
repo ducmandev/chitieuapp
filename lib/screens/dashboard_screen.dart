@@ -10,6 +10,10 @@ import 'package:chitieuapp/l10n/app_localizations.dart';
 import '../app_config.dart';
 import '../utils/category_utils.dart';
 import 'login_screen.dart';
+import 'breakdown_screen.dart';
+import 'goals_screen.dart';
+import 'statistics_screen.dart';
+import 'budgets_screen.dart';
 
 class DashboardScreen extends StatelessWidget {
   const DashboardScreen({super.key});
@@ -59,6 +63,8 @@ class DashboardScreen extends StatelessWidget {
                         _buildMonthlyCap(context, neo),
                       ],
                       const SizedBox(height: 32),
+                      if (!isWide) _buildQuickAccessSection(context, neo),
+                      const SizedBox(height: 24),
                       _buildLatestRegrets(context, neo),
                       const SizedBox(height: 80),
                     ]),
@@ -121,7 +127,7 @@ class DashboardScreen extends StatelessWidget {
                   ),
                 ),
               ),
-              const SizedBox(width: 12),
+              const SizedBox(width: 8),
               GestureDetector(
                 onTap: () async {
                   await context.read<AppProvider>().logout();
@@ -350,13 +356,13 @@ class DashboardScreen extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(width: 8),
-                    Text(
+                    Flexible(child: Text(
                       AppLocalizations.of(context)!.vsLastMonth,
                       style: NeoTypography.mono.copyWith(
                         fontSize: 12,
                         color: NeoColors.ink,
                       ),
-                    ),
+                    ),),
                   ],
                 ),
               ],
@@ -638,6 +644,145 @@ class DashboardScreen extends StatelessWidget {
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildQuickAccessSection(BuildContext context, NeoThemeData neo) {
+    final loc = AppLocalizations.of(context)!;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'QUICK ACCESS',
+          style: NeoTypography.mono.copyWith(
+            fontSize: 12,
+            fontWeight: FontWeight.bold,
+            color: neo.textSub,
+          ),
+        ),
+        const SizedBox(height: 16),
+        Column(
+          children: [
+            Row(
+              children: [
+                Expanded(
+                  child: _buildQuickAccessCard(
+                    context,
+                    Icons.pie_chart_outline,
+                    loc.navBreakdown,
+                    NeoColors.tertiary,
+                    () => Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (_) => const BreakdownScreen()),
+                    ),
+                    neo,
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: _buildQuickAccessCard(
+                    context,
+                    Icons.account_balance_wallet_outlined,
+                    loc.navBudgets,
+                    NeoColors.primary,
+                    () => Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (_) => const BudgetsScreen()),
+                    ),
+                    neo,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 8),
+            Row(
+              children: [
+                Expanded(
+                  child: _buildQuickAccessCard(
+                    context,
+                    Icons.flag_outlined,
+                    loc.navGoals,
+                    NeoColors.success,
+                    () => Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (_) => const GoalsScreen()),
+                    ),
+                    neo,
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: _buildQuickAccessCard(
+                    context,
+                    Icons.bar_chart,
+                    loc.navStatistics,
+                    NeoColors.secondary,
+                    () => Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (_) => const StatisticsScreen()),
+                    ),
+                    neo,
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget _buildQuickAccessCard(
+    BuildContext context,
+    IconData icon,
+    String label,
+    Color color,
+    VoidCallback onTap,
+    NeoThemeData neo,
+  ) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        height: 80,
+        decoration: BoxDecoration(
+          color: color,
+          border: Border.all(color: neo.ink, width: 3),
+          borderRadius: BorderRadius.circular(0),
+          boxShadow: [
+            BoxShadow(
+              color: neo.ink,
+              offset: const Offset(4, 4),
+            ),
+          ],
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              width: 40,
+              height: 40,
+              decoration: BoxDecoration(
+                color: neo.background,
+                border: Border.all(color: neo.ink, width: 2),
+              ),
+              child: Icon(icon, color: neo.ink, size: 24),
+            ),
+            const SizedBox(height: 6),
+            Text(
+              label.toUpperCase(),
+              style: NeoTypography.mono.copyWith(
+                fontSize: 10,
+                fontWeight: FontWeight.bold,
+                color: neo.ink,
+              ),
+              textAlign: TextAlign.center,
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ],
+        ),
       ),
     );
   }

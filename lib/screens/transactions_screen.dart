@@ -7,6 +7,7 @@ import '../widgets/neo_button.dart';
 import '../providers/app_provider.dart';
 import 'package:chitieuapp/l10n/app_localizations.dart';
 import '../utils/category_utils.dart';
+import 'search_screen.dart';
 
 class TransactionsScreen extends StatefulWidget {
   const TransactionsScreen({super.key});
@@ -62,20 +63,38 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          const SizedBox(width: 44),
-          Text(
-            AppLocalizations.of(context)!.paperTrail,
-            style: NeoTypography.textTheme.headlineMedium?.copyWith(
-              letterSpacing: -1,
-              color: neo.textMain,
+          Transform.rotate(
+            angle: -0.05,
+            child: Text(
+              AppLocalizations.of(context)!.paperTrail,
+              style: NeoTypography.textTheme.headlineMedium?.copyWith(
+                fontStyle: FontStyle.italic,
+                letterSpacing: -1,
+                color: neo.textMain,
+              ),
             ),
           ),
-          NeoButton(
-            padding: const EdgeInsets.all(8),
-            onPressed: () {
-              _showFilterBottomSheet(context);
-            },
-            child: Icon(Icons.filter_alt, size: 28, color: neo.textMain),
+          Row(
+            children: [
+              NeoButton(
+                padding: const EdgeInsets.all(8),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const SearchScreen()),
+                  );
+                },
+                child: Icon(Icons.search, size: 24, color: neo.textMain),
+              ),
+              const SizedBox(width: 8),
+              NeoButton(
+                padding: const EdgeInsets.all(8),
+                onPressed: () {
+                  _showFilterBottomSheet(context);
+                },
+                child: Icon(Icons.filter_alt, size: 24, color: neo.textMain),
+              ),
+            ],
           ),
         ],
       ),

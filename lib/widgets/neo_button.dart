@@ -3,7 +3,7 @@ import '../theme/colors.dart';
 
 class NeoButton extends StatefulWidget {
   final Widget child;
-  final VoidCallback onPressed;
+  final VoidCallback? onPressed;
   final Color backgroundColor;
   final EdgeInsetsGeometry padding;
   final double borderWidth;
@@ -14,7 +14,7 @@ class NeoButton extends StatefulWidget {
   const NeoButton({
     super.key,
     required this.child,
-    required this.onPressed,
+    this.onPressed,
     this.backgroundColor = NeoColors.surface,
     this.padding = const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
     this.borderWidth = 3.0,
@@ -35,13 +35,14 @@ class _NeoButtonState extends State<NeoButton> {
     final offset = _isPressed
         ? widget.pressedShadowOffset
         : widget.shadowOffset;
+    final isEnabled = widget.onPressed != null;
 
     return GestureDetector(
-      onTapDown: (_) => setState(() => _isPressed = true),
-      onTapUp: (_) {
+      onTapDown: isEnabled ? (_) => setState(() => _isPressed = true) : null,
+      onTapUp: isEnabled ? (_) {
         setState(() => _isPressed = false);
-        widget.onPressed();
-      },
+        widget.onPressed?.call();
+      } : null,
       onTapCancel: () => setState(() => _isPressed = false),
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 100),

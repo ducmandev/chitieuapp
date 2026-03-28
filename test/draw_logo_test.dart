@@ -84,6 +84,6 @@ void main() {
 
     final file = File('assets/app_icon.png');
     await file.writeAsBytes(buffer);
-    print('✅ App icon successfully written to assets/app_icon.png');
+    debugPrint('✅ App icon successfully written to assets/app_icon.png');
   });
 }

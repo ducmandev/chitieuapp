@@ -213,6 +213,21 @@ class AppLocalizationsVi extends AppLocalizations {
   String get navSettings => 'CÀI ĐẶT';
 
   @override
+  String get navBudgets => 'NGÂN SÁCH';
+
+  @override
+  String get navGoals => 'MỤC TIÊU';
+
+  @override
+  String get navWallets => 'VÍ';
+
+  @override
+  String get navTemplates => 'MẪU';
+
+  @override
+  String get navStatistics => 'THỐNG KÊ';
+
+  @override
   String get systemPrefs => 'HỆ THỐNG';
 
   @override
@@ -367,4 +382,484 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get useBiometric => 'SỬ DỤNG SINH TRẮC HỌC';
+
+  @override
+  String get edit => 'CHỈNH SỬA';
+
+  @override
+  String get save => 'LƯU';
+
+  @override
+  String get cancel => 'HỦY';
+
+  @override
+  String get delete => 'XÓA';
+
+  @override
+  String get add => 'THÊM';
+
+  @override
+  String get create => 'TẠO';
+
+  @override
+  String get update => 'CẬP NHẬT';
+
+  @override
+  String get confirm => 'XÁC NHẬN';
+
+  @override
+  String get done => 'XONG';
+
+  @override
+  String get budgets => 'NGÂN SÁCH';
+
+  @override
+  String get budgetLimit => 'HẠN MỨC';
+
+  @override
+  String get setBudget => 'ĐẶT NGÂN SÁCH';
+
+  @override
+  String get period => 'KỲ';
+
+  @override
+  String get monthly => 'Hàng tháng';
+
+  @override
+  String get weekly => 'Hàng tuần';
+
+  @override
+  String get remaining => 'CÒN LẠI';
+
+  @override
+  String get overBudget => 'VƯỢT NGÂN SÁCH';
+
+  @override
+  String get setCategoryBudget => 'Đặt hạn mức cho';
+
+  @override
+  String get noBudgets => 'Chưa đặt ngân sách';
+
+  @override
+  String get addBudget => 'THÊM NGÂN SÁCH';
+
+  @override
+  String get editBudget => 'CHỈNH SỬA';
+
+  @override
+  String get deleteBudget => 'XÓA NGÂN SÁCH';
+
+  @override
+  String get budgetWarning => 'Cảnh báo ngân sách';
+
+  @override
+  String get budgetWarningMsg => 'Bạn đã dùng 80% ngân sách cho';
+
+  @override
+  String get goals => 'MỤC TIÊU';
+
+  @override
+  String get goalName => 'TÊN MỤC TIÊU';
+
+  @override
+  String get targetAmount => 'SỐ TIỀN MỤC TIÊU';
+
+  @override
+  String get saved => 'ĐÃ TIẾT KIỆM';
+
+  @override
+  String get progress => 'TIẾN ĐỘ';
+
+  @override
+  String get deadline => 'HẠN CHÓT';
+
+  @override
+  String get addGoal => 'THÊM MỤC TIÊU';
+
+  @override
+  String get noGoals => 'Chưa có mục tiêu nào';
+
+  @override
+  String get goalCompleted => 'ĐÃ ĐẠT MỤC TIÊU!';
+
+  @override
+  String get congratsGoal => 'Chúc mừng! Bạn đã đạt được mục tiêu';
+
+  @override
+  String get addToSavings => 'THÊM VÀO TIẾT KIỆM';
+
+  @override
+  String get daysLeft => 'ngày còn lại';
+
+  @override
+  String get deleteGoal => 'XÓA MỤC TIÊU';
+
+  @override
+  String get recurring => 'ĐỊNH KỲ';
+
+  @override
+  String get frequency => 'TẦN SUẤT';
+
+  @override
+  String get daily => 'Hàng ngày';
+
+  @override
+  String get yearly => 'Hàng năm';
+
+  @override
+  String get nextDue => 'ĐẾN HẠN';
+
+  @override
+  String get isActive => 'HOẠT ĐỘNG';
+
+  @override
+  String get endDate => 'NGÀY KẾT THÚC';
+
+  @override
+  String get addRecurring => 'THÊM GIAO DỊCH ĐỊNH KỲ';
+
+  @override
+  String get noRecurring => 'Chưa có giao dịch định kỳ';
+
+  @override
+  String get editRecurring => 'CHỈNH SỬA';
+
+  @override
+  String get deleteRecurring => 'XÓA';
+
+  @override
+  String get recurringProcessed => 'Đã xử lý giao dịch định kỳ';
+
+  @override
+  String get wallets => 'VÍ';
+
+  @override
+  String get walletName => 'TÊN VÍ';
+
+  @override
+  String get balance => 'SỐ DƯ';
+
+  @override
+  String get type => 'LOẠI';
+
+  @override
+  String get cash => 'Tiền mặt';
+
+  @override
+  String get bank => 'Ngân hàng';
+
+  @override
+  String get credit => 'Thẻ tín dụng';
+
+  @override
+  String get savings => 'Tiết kiệm';
+
+  @override
+  String get defaultWallet => 'MẶC ĐỊNH';
+
+  @override
+  String get addWallet => 'THÊM VÍ';
+
+  @override
+  String get noWallets => 'Chưa có ví nào';
+
+  @override
+  String get editWallet => 'CHỈNH SỬA VÍ';
+
+  @override
+  String get deleteWallet => 'XÓA VÍ';
+
+  @override
+  String get transfer => 'CHUYỂN TIỀN';
+
+  @override
+  String get transferBetween => 'Chuyển tiền giữa các ví';
+
+  @override
+  String get from => 'TỪ';
+
+  @override
+  String get to => 'ĐẾN';
+
+  @override
+  String get amount => 'SỐ TIỀN';
+
+  @override
+  String get setDefault => 'ĐẶT LÀM MẶC ĐỊNH';
+
+  @override
+  String get templates => 'MẪU';
+
+  @override
+  String get templateName => 'TÊN MẪU';
+
+  @override
+  String get useTemplate => 'SỬ DỤNG MẪU';
+
+  @override
+  String get saveAsTemplate => 'LƯU LÀM MẪU';
+
+  @override
+  String get noTemplates => 'Chưa có mẫu nào';
+
+  @override
+  String get templateSaved => 'Đã lưu mẫu';
+
+  @override
+  String get deleteTemplate => 'XÓA MẪU';
+
+  @override
+  String get search => 'TÌM KIẾM';
+
+  @override
+  String get filter => 'LỌC';
+
+  @override
+  String get dateRange => 'KHOẢNG THỜI GIAN';
+
+  @override
+  String get sortBy => 'SẮP XẾP THEO';
+
+  @override
+  String get results => 'KẾT QUẢ';
+
+  @override
+  String get noResults => 'Không tìm thấy kết quả';
+
+  @override
+  String get searchPlaceholder => 'Tìm kiếm giao dịch...';
+
+  @override
+  String get allTime => 'Tất cả';
+
+  @override
+  String get last7Days => '7 ngày qua';
+
+  @override
+  String get last30Days => '30 ngày qua';
+
+  @override
+  String get last90Days => '90 ngày qua';
+
+  @override
+  String get thisYear => 'Năm nay';
+
+  @override
+  String get custom => 'Tùy chỉnh';
+
+  @override
+  String get newestFirst => 'Mới nhất trước';
+
+  @override
+  String get oldestFirst => 'Cũ nhất trước';
+
+  @override
+  String get highestAmount => 'Số tiền lớn nhất';
+
+  @override
+  String get lowestAmount => 'Số tiền nhỏ nhất';
+
+  @override
+  String get byCategory => 'Theo danh mục';
+
+  @override
+  String get reports => 'BÁO CÁO';
+
+  @override
+  String get exportPDF => 'XUẤT PDF';
+
+  @override
+  String get generateReport => 'TẠO BÁO CÁO';
+
+  @override
+  String get monthlyReport => 'BÁO CÁO THÁNG';
+
+  @override
+  String get yearlyReport => 'BÁO CÁO NĂM';
+
+  @override
+  String get reportSummary => 'TÓM TẮT';
+
+  @override
+  String get reportIncome => 'TỔNG THU';
+
+  @override
+  String get reportExpense => 'TỔNG CHI';
+
+  @override
+  String get reportNet => 'TIẾT KIỆM';
+
+  @override
+  String get shareReport => 'CHIA SẺ BÁO CÁO';
+
+  @override
+  String get statistics => 'THỐNG KÊ';
+
+  @override
+  String get spendingTrend => 'XU HƯỚNG CHI TIÊU';
+
+  @override
+  String get incomeVsExpense => 'THU VÀ CHI';
+
+  @override
+  String get topCategories => 'DANH MỤC HÀNG ĐẦU';
+
+  @override
+  String get last6Months => '6 THÁNG QUA';
+
+  @override
+  String get last12Months => '12 THÁNG QUA';
+
+  @override
+  String get averageSpending => 'CHI TIÊU TRUNG BÌNH';
+
+  @override
+  String get monthOverMonth => 'SO SÁNH THÁNG';
+
+  @override
+  String get onboarding => 'HƯỚNG DẪN';
+
+  @override
+  String get welcome => 'CHÀO MỪNG';
+
+  @override
+  String get skip => 'BỎ QUA';
+
+  @override
+  String get next => 'TIẾP';
+
+  @override
+  String get finish => 'HOÀN THÀNH';
+
+  @override
+  String get getStarted => 'BẮT ĐẦU';
+
+  @override
+  String get onboardingTitle1 => 'Theo Dõi Chi Tiêu';
+
+  @override
+  String get onboardingDesc1 => 'Theo dõi tiền của bạn với Neo.Cash';
+
+  @override
+  String get onboardingTitle2 => 'Đặt Ngân Sách';
+
+  @override
+  String get onboardingDesc2 => 'Tạo ngân sách cho từng danh mục để kiểm soát chi tiêu';
+
+  @override
+  String get onboardingTitle3 => 'Đạt Mục Tiêu';
+
+  @override
+  String get onboardingDesc3 => 'Đặt mục tiêu tiết kiệm và theo dõi tiến độ';
+
+  @override
+  String get categoryManagement => 'DANH MỤC';
+
+  @override
+  String get addCategory => 'THÊM DANH MỤC';
+
+  @override
+  String get editCategory => 'CHỈNH SỬA DANH MỤC';
+
+  @override
+  String get deleteCategory => 'XÓA DANH MỤC';
+
+  @override
+  String get categoryName => 'TÊN DANH MỤC';
+
+  @override
+  String get selectIcon => 'CHỌN BIỂU TƯỢNG';
+
+  @override
+  String get selectColor => 'CHỌN MÀU';
+
+  @override
+  String get categoryType => 'LOẠI';
+
+  @override
+  String get categoryWarning => 'Danh mục này có giao dịch. Bạn có chắc không?';
+
+  @override
+  String get note => 'GHI CHÚ';
+
+  @override
+  String get tags => 'THẺ';
+
+  @override
+  String get addTag => 'Thêm thẻ';
+
+  @override
+  String get noTags => 'Chưa có thẻ';
+
+  @override
+  String get attachReceipt => 'ĐÍNH KÈM HÓA ĐƠN';
+
+  @override
+  String get changeReceipt => 'THAY ĐỔI';
+
+  @override
+  String get removeReceipt => 'XÓA HÓA ĐƠN';
+
+  @override
+  String get selectWallet => 'CHỌN VÍ';
+
+  @override
+  String get allWallets => 'TẤT CẢ VÍ';
+
+  @override
+  String get encryption => 'MÃ HÓA';
+
+  @override
+  String get exportEncrypted => 'XUẤT SAU LƯU MÃ HÓA';
+
+  @override
+  String get importEncrypted => 'NHẬP SAU LƯU MÃ HÓA';
+
+  @override
+  String get backupPassword => 'MẬT KHẨU SAU LƯU';
+
+  @override
+  String get enterPassword => 'NHẬP MẬT KHẨU';
+
+  @override
+  String get passwordsMatch => 'Mật khẩu khớp';
+
+  @override
+  String get backupCreated => 'Đã tạo sao lưu thành công';
+
+  @override
+  String get backupRestored => 'Đã khôi phục sao lưu thành công';
+
+  @override
+  String get backupFailed => 'Thao tác sao lưu thất bại';
+
+  @override
+  String get selectStartDate => 'CHỌN NGÀY BẮT ĐẦU';
+
+  @override
+  String get selectEndDate => 'CHỌN NGÀY KẾT THÚC';
+
+  @override
+  String get apply => 'ÁP DỤNG';
+
+  @override
+  String get reset => 'ĐẶT LẠI';
+
+  @override
+  String get previous => 'TRƯỚC';
+
+  @override
+  String get category => 'DANH MỤC';
+
+  @override
+  String get title => 'TIÊU ĐỀ';
+
+  @override
+  String get date => 'NGÀY';
+
+  @override
+  String get remove => 'XÓA';
+
+  @override
+  String get importCsv => 'NHẬP CSV';
 }

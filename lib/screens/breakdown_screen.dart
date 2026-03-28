@@ -241,7 +241,19 @@ class _BreakdownScreenState extends State<BreakdownScreen> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
+            IconButton(
+              icon: const Icon(Icons.arrow_back),
+              color: neo.ink,
+              onPressed: () => Navigator.pop(context),
+              padding: EdgeInsets.zero,
+              constraints: const BoxConstraints(),
+            ),
+            const SizedBox(width: 8),
+            Expanded(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                Text(
                 loc.breakdown,
                 style: NeoTypography.textTheme.displayMedium?.copyWith(
                   letterSpacing: -1,
@@ -249,7 +261,7 @@ class _BreakdownScreenState extends State<BreakdownScreen> {
                   height: 1,
                 ),
               ),
-              NeoButton(
+                NeoButton(
                 padding: const EdgeInsets.all(8),
                 onPressed: () {
                   ScaffoldMessenger.of(context).showSnackBar(
@@ -258,7 +270,10 @@ class _BreakdownScreenState extends State<BreakdownScreen> {
                 },
                 child: const Icon(Icons.calendar_month, size: 28),
               ),
-            ],
+                ],
+              ),
+            ),
+          ],
           ),
           const SizedBox(height: 24),
 

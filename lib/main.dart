@@ -1,5 +1,8 @@
+import 'dart:io' show Platform;
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'theme/colors.dart';
 import 'theme/typography.dart';
 import 'theme/neo_theme.dart';
@@ -12,6 +15,12 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:chitieuapp/l10n/app_localizations.dart';
 
 void main() {
+  // Initialize SQLite FFI for desktop platforms
+  if (!kIsWeb && (Platform.isWindows || Platform.isLinux || Platform.isMacOS)) {
+    sqfliteFfiInit();
+    databaseFactory = databaseFactoryFfi;
+  }
+
   runApp(
     MultiProvider(
       providers: [ChangeNotifierProvider(create: (_) => AppProvider())],

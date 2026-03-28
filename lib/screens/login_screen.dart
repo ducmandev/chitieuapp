@@ -8,6 +8,7 @@ import '../widgets/neo_text_field.dart';
 import '../services/prefs_helper.dart';
 import 'register_screen.dart';
 import 'main_layout.dart';
+import 'onboarding_screen.dart';
 import 'package:flutter/services.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:chitieuapp/l10n/app_localizations.dart';
@@ -36,52 +37,66 @@ class _LoginScreenState extends State<LoginScreen> {
 
     if (username.isEmpty || password.isEmpty) return;
 
+    final scaffoldMessenger = ScaffoldMessenger.of(context);
+    final navigator = Navigator.of(context);
+    final loc = AppLocalizations.of(context)!;
+    final provider = context.read<AppProvider>();
+
     final hasAccount = await PrefsHelper.hasRegisteredUser();
     if (!context.mounted) return;
-    
+
     if (!hasAccount) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(AppLocalizations.of(context)!.noAccount)),
+      scaffoldMessenger.showSnackBar(
+        SnackBar(content: Text(loc.noAccount)),
       );
       return;
     }
 
     final isValid = await PrefsHelper.checkCredentials(username, password);
     if (!context.mounted) return;
-    
+
     if (!isValid) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(AppLocalizations.of(context)!.invalidCredentials)),
+      scaffoldMessenger.showSnackBar(
+        SnackBar(content: Text(loc.invalidCredentials)),
       );
       return;
     }
 
-    await context.read<AppProvider>().login(username, 0.0, 5000000.0);
+    await provider.login(username, 0.0, 5000000.0);
     if (!context.mounted) return;
-    
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(builder: (context) => const MainLayout()),
-    );
+
+    if (!provider.onboardingCompleted) {
+      navigator.pushReplacement(
+        MaterialPageRoute(builder: (context) => const OnboardingScreen()),
+      );
+    } else {
+      navigator.pushReplacement(
+        MaterialPageRoute(builder: (context) => const MainLayout()),
+      );
+    }
   }
 
   void _loginWithBiometrics() async {
+    final scaffoldMessenger = ScaffoldMessenger.of(context);
+    final navigator = Navigator.of(context);
+    final loc = AppLocalizations.of(context)!;
+    final provider = context.read<AppProvider>();
+
     final hasAccount = await PrefsHelper.hasRegisteredUser();
     if (!context.mounted) return;
-    
+
     if (!hasAccount) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(AppLocalizations.of(context)!.noAccount)),
+      scaffoldMessenger.showSnackBar(
+        SnackBar(content: Text(loc.noAccount)),
       );
       return;
     }
 
     // Check if biometric was enabled by the user previously
-    final provider = context.read<AppProvider>();
     if (!provider.biometricEnabled) {
-      ScaffoldMessenger.of(context).showSnackBar(
+      scaffoldMessenger.showSnackBar(
         SnackBar(
-          content: Text(AppLocalizations.of(context)!.biometricNotEnabled),
+          content: Text(loc.biometricNotEnabled),
         ),
       );
       return;
@@ -94,15 +109,14 @@ class _LoginScreenState extends State<LoginScreen> {
       if (!context.mounted) return;
 
       if (!canCheck && !isSupported) {
-        ScaffoldMessenger.of(context).showSnackBar(
+        scaffoldMessenger.showSnackBar(
           SnackBar(
-            content: Text(AppLocalizations.of(context)!.biometricNotAvailable),
+            content: Text(loc.biometricNotAvailable),
           ),
         );
         return;
       }
 
-      final loc = AppLocalizations.of(context)!;
       final didAuthenticate = await auth.authenticate(
         localizedReason: loc.biometricPrompt,
         options: const AuthenticationOptions(
@@ -116,21 +130,26 @@ class _LoginScreenState extends State<LoginScreen> {
         // Proceed login with a default local session since biometric passed
         final username = await PrefsHelper.getRegisteredUser() ?? 'User';
         if (!context.mounted) return;
-        
+
         await provider.login(username, 0.0, 5000000.0);
         if (!context.mounted) return;
-        
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => const MainLayout()),
-        );
+
+        if (!provider.onboardingCompleted) {
+          navigator.pushReplacement(
+            MaterialPageRoute(builder: (context) => const OnboardingScreen()),
+          );
+        } else {
+          navigator.pushReplacement(
+            MaterialPageRoute(builder: (context) => const MainLayout()),
+          );
+        }
       }
     } on PlatformException catch (e) {
       debugPrint('Biometric Error: $e');
       if (!context.mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
+      scaffoldMessenger.showSnackBar(
         SnackBar(
-          content: Text(AppLocalizations.of(context)!.biometricNotAvailable),
+          content: Text(loc.biometricNotAvailable),
         ),
       );
     }

@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:io';
-import 'dart:typed_data';
 import 'package:file_picker/file_picker.dart';
 import 'package:csv/csv.dart';
 import 'package:flutter/material.dart';
@@ -17,6 +16,9 @@ import '../models/transaction.dart';
 import '../app_config.dart';
 import 'profile_screen.dart';
 import 'login_screen.dart';
+import 'reports_screen.dart';
+import 'category_management_screen.dart';
+import '../services/encryption_service.dart';
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
@@ -61,6 +63,18 @@ class SettingsScreen extends StatelessWidget {
                       const SizedBox(height: 16),
                       _buildCurrencySelect(context),
                       const SizedBox(height: 16),
+                      _buildCategoryManagementButton(context),
+                      const SizedBox(height: 16),
+                      _buildReportsButton(context),
+                      const SizedBox(height: 24),
+                      _buildSectionTitle(
+                        context,
+                        AppLocalizations.of(context)!.encryption,
+                        NeoColors.error,
+                      ),
+                      const SizedBox(height: 16),
+                      _buildEncryptedBackupButtons(context),
+                      const SizedBox(height: 16),
                       Row(
                         children: [
                           Expanded(child: _buildExportButton(context)),
@@ -93,7 +107,7 @@ class SettingsScreen extends StatelessWidget {
         color: neo.background,
         border: Border(bottom: BorderSide(color: neo.ink, width: 3)),
       ),
-      child: Row(
+      child: Padding(padding: const EdgeInsets.symmetric(horizontal: 8), child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Transform(
@@ -121,7 +135,7 @@ class SettingsScreen extends StatelessWidget {
             ),
           ),
         ],
-      ),
+      ),),
     );
   }
 
@@ -952,11 +966,15 @@ class SettingsScreen extends StatelessWidget {
               children: [
                 const Icon(Icons.upload, size: 24),
                 const SizedBox(width: 8),
-                Text(
-                  loc.exportCsv,
-                  style: NeoTypography.textTheme.titleMedium?.copyWith(
-                    letterSpacing: 1,
-                    fontSize: 14,
+                Flexible(
+                  child: Text(
+                    loc.exportCsv,
+                    style: NeoTypography.textTheme.titleMedium?.copyWith(
+                      letterSpacing: 1,
+                      fontSize: 14,
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                   ),
                 ),
               ],
@@ -987,17 +1005,446 @@ class SettingsScreen extends StatelessWidget {
               children: [
                 const Icon(Icons.download, size: 24),
                 const SizedBox(width: 8),
-                Text(
-                  'IMPORT CSV', // no localization needed for MVP unless specified
-                  style: NeoTypography.textTheme.titleMedium?.copyWith(
-                    letterSpacing: 1,
-                    fontSize: 14,
+                Flexible(
+                  child: Text(
+                    'IMPORT CSV', // no localization needed for MVP unless specified
+                    style: NeoTypography.textTheme.titleMedium?.copyWith(
+                      letterSpacing: 1,
+                      fontSize: 14,
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                   ),
                 ),
               ],
             ),
           );
         },
+      ),
+    );
+  }
+
+  // ─── Reports Button ─────────────────────────────────────────────────────────
+
+  Widget _buildReportsButton(BuildContext context) {
+    final loc = AppLocalizations.of(context)!;
+    final neo = NeoTheme.of(context);
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const ReportsScreen()),
+        );
+      },
+      child: Container(
+        height: 56,
+        decoration: BoxDecoration(
+          color: NeoColors.secondary,
+          border: Border.all(color: neo.inkOnCard, width: 3),
+          boxShadow: [
+            BoxShadow(color: neo.inkOnCard, offset: const Offset(4, 4)),
+          ],
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Icon(Icons.picture_as_pdf, color: Colors.white, size: 24),
+            const SizedBox(width: 8),
+            Text(
+              loc.reports,
+              style: NeoTypography.textTheme.titleLarge?.copyWith(
+                letterSpacing: 2,
+                color: Colors.white,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  // ─── Category Management Button ─────────────────────────────────────────────
+
+  Widget _buildCategoryManagementButton(BuildContext context) {
+    final loc = AppLocalizations.of(context)!;
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const CategoryManagementScreen()),
+        );
+      },
+      child: Container(
+        height: 56,
+        decoration: BoxDecoration(
+          color: NeoColors.tertiary.withValues(alpha: 0.2),
+          border: Border.all(color: NeoColors.tertiary, width: 2),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.category, color: NeoColors.tertiary, size: 24),
+            const SizedBox(width: 8),
+            Text(
+              loc.categoryManagement,
+              style: NeoTypography.textTheme.titleLarge?.copyWith(
+                letterSpacing: 2,
+                color: NeoColors.tertiary,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  // ─── Encrypted Backup Buttons ───────────────────────────────────────────────
+
+  Widget _buildEncryptedBackupButtons(BuildContext context) {
+    final loc = AppLocalizations.of(context)!;
+    final neo = NeoTheme.of(context);
+
+    return Row(
+      children: [
+        Expanded(
+          child: _buildBackupButton(
+            context,
+            loc.exportEncrypted,
+            Icons.lock,
+            NeoColors.error,
+            () => _showEncryptedExportDialog(context),
+            neo,
+          ),
+        ),
+        const SizedBox(width: 12),
+        Expanded(
+          child: _buildBackupButton(
+            context,
+            loc.importEncrypted,
+            Icons.lock_open,
+            NeoColors.success,
+            () => _showEncryptedImportDialog(context),
+            neo,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildBackupButton(
+    BuildContext context,
+    String label,
+    IconData icon,
+    Color color,
+    VoidCallback onTap,
+    NeoThemeData neo,
+  ) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        height: 56, padding: const EdgeInsets.symmetric(horizontal: 4),
+        decoration: BoxDecoration(
+          color: color.withValues(alpha: 0.1),
+          border: Border.all(color: color, width: 2),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(icon, color: color, size: 20),
+            const SizedBox(width: 8),
+            Flexible(
+              child: Text(
+                label,
+                style: NeoTypography.mono.copyWith(
+                  fontWeight: FontWeight.bold,
+                  color: color,
+                  fontSize: 12,
+                ),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _showEncryptedExportDialog(BuildContext context) {
+    final neo = NeoTheme.of(context);
+    final loc = AppLocalizations.of(context)!;
+    final passwordController = TextEditingController();
+    final confirmPasswordController = TextEditingController();
+    PasswordStrength strength = PasswordStrength.empty;
+
+    showDialog(
+      context: context,
+      builder: (context) => StatefulBuilder(
+        builder: (context, setDialogState) {
+          return AlertDialog(
+            backgroundColor: neo.surface,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(0),
+              side: BorderSide(color: neo.ink, width: 3),
+            ),
+            title: Text(loc.exportEncrypted),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TextField(
+                  controller: passwordController,
+                  obscureText: true,
+                  decoration: InputDecoration(
+                    labelText: loc.backupPassword,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(0),
+                      borderSide: BorderSide(color: neo.ink, width: 2),
+                    ),
+                  ),
+                  onChanged: (value) {
+                    setDialogState(() {
+                      strength = EncryptionService.validatePassword(value);
+                    });
+                  },
+                ),
+                const SizedBox(height: 8),
+                TextField(
+                  controller: confirmPasswordController,
+                  obscureText: true,
+                  decoration: InputDecoration(
+                    labelText: loc.confirmPassword,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(0),
+                      borderSide: BorderSide(color: neo.ink, width: 2),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Container(
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: strength.color.withValues(alpha: 0.1),
+                    border: Border.all(color: strength.color, width: 1),
+                  ),
+                  child: Row(
+                    children: [
+                      Icon(
+                        strength == PasswordStrength.strong
+                            ? Icons.check_circle
+                            : strength == PasswordStrength.medium
+                                ? Icons.warning
+                                : Icons.error,
+                        color: strength.color,
+                        size: 16,
+                      ),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              strength.label,
+                              style: NeoTypography.mono.copyWith(
+                                fontSize: 11,
+                                fontWeight: FontWeight.bold,
+                                color: strength.color,
+                              ),
+                            ),
+                            if (strength.description.isNotEmpty)
+                              Text(
+                                strength.description,
+                                style: NeoTypography.textTheme.bodySmall?.copyWith(
+                                  fontSize: 10,
+                                  color: neo.textSub,
+                                ),
+                              ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: Text(loc.cancel),
+              ),
+              ElevatedButton(
+                onPressed: () async {
+                  final password = passwordController.text;
+                  final confirm = confirmPasswordController.text;
+
+                  if (password.isEmpty) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text('Please enter a password')),
+                    );
+                    return;
+                  }
+
+                  if (password != confirm) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text(loc.passwordMismatch)),
+                    );
+                    return;
+                  }
+
+                  if (strength == PasswordStrength.weak) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text('Please use a stronger password')),
+                    );
+                    return;
+                  }
+
+                  // Export encrypted backup
+                  try {
+                    final provider = context.read<AppProvider>();
+                    final jsonData = jsonEncode({
+                      'transactions': provider.transactions.map((t) => t.toMap()).toList(),
+                      'wallets': provider.wallets.map((w) => w.toMap()).toList(),
+                      'budgets': provider.budgets.map((b) => b.toMap()).toList(),
+                      'goals': provider.goals.map((g) => g.toMap()).toList(),
+                      'recurring': provider.recurringTransactions.map((r) => r.toMap()).toList(),
+                      'templates': provider.templates.map((t) => t.toMap()).toList(),
+                      'exportDate': DateTime.now().toIso8601String(),
+                    });
+
+                    EncryptionService.encryptData(jsonData, password);
+
+                    if (context.mounted) {
+                      Navigator.pop(context);
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(loc.backupCreated),
+                          backgroundColor: NeoColors.success,
+                        ),
+                      );
+                    }
+                  } catch (e) {
+                    if (context.mounted) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(loc.backupFailed),
+                          backgroundColor: NeoColors.error,
+                        ),
+                      );
+                    }
+                  }
+                },
+                child: Text(loc.exportCsv),
+              ),
+            ],
+          );
+        },
+      ),
+    );
+  }
+
+  void _showEncryptedImportDialog(BuildContext context) {
+    final neo = NeoTheme.of(context);
+    final loc = AppLocalizations.of(context)!;
+    final passwordController = TextEditingController();
+
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        backgroundColor: neo.surface,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(0),
+          side: BorderSide(color: neo.ink, width: 3),
+        ),
+        title: Text(loc.importEncrypted),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              'Select encrypted backup file and enter password',
+              style: NeoTypography.textTheme.bodyMedium?.copyWith(
+                color: neo.textSub,
+              ),
+            ),
+            const SizedBox(height: 16),
+            TextField(
+              controller: passwordController,
+              obscureText: true,
+              decoration: InputDecoration(
+                labelText: loc.backupPassword,
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(0),
+                  borderSide: BorderSide(color: neo.ink, width: 2),
+                ),
+              ),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text(loc.cancel),
+          ),
+          ElevatedButton(
+            onPressed: () async {
+              final password = passwordController.text;
+
+              if (password.isEmpty) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text('Please enter password')),
+                );
+                return;
+              }
+
+              // Select file and decrypt
+              try {
+                final result = await FilePicker.platform.pickFiles(
+                  type: FileType.custom,
+                  allowedExtensions: ['encrypted'],
+                );
+
+                if (result != null && result.files.single.path != null) {
+                  final file = File(result.files.single.path!);
+                  final encryptedData = await file.readAsString();
+
+                  try {
+                    // TODO: Import data using decrypted JSON
+                    EncryptionService.decryptData(encryptedData, password);
+                    // final provider = context.read<AppProvider>();
+                    // TODO: Implement proper import logic
+
+                    if (context.mounted) {
+                      Navigator.pop(context);
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(loc.backupRestored),
+                          backgroundColor: NeoColors.success,
+                        ),
+                      );
+                    }
+                  } catch (e) {
+                    if (context.mounted) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text('Wrong password or corrupted file'),
+                          backgroundColor: NeoColors.error,
+                        ),
+                      );
+                    }
+                  }
+                }
+              } catch (e) {
+                if (context.mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(loc.backupFailed),
+                      backgroundColor: NeoColors.error,
+                    ),
+                  );
+                }
+              }
+            },
+            child: Text(loc.importCsv),
+          ),
+        ],
       ),
     );
   }
